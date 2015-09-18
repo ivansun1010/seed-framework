@@ -1,0 +1,34 @@
+10
+
+dir
+1507
+svn://192.168.98.76/project/code/seed-framework/seed-admin/src/main/webapp/WEB-INF/views/promotion
+svn://192.168.98.76/project
+
+
+
+2015-09-18T10:54:14.593245Z
+1499
+liyh
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+68ace0ce-81fd-4f19-975a-7f69436b9dff
+
+promotionGift
+dir
+
+promotionReduce
+dir
+

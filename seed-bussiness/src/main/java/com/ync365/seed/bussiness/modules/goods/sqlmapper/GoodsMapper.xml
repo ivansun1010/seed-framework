@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ync365.seed.bussiness.modules.goods.dao.GoodsDao" >
+  <resultMap id="BaseResultMap" type="com.ync365.seed.bussiness.modules.goods.entity.Goods" >
+    <id column="goods_id" property="goodsId" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="uuid" property="uuid" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="tag_img_id" property="tagImgId" jdbcType="INTEGER" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="is_new" property="isNew" jdbcType="DECIMAL" />
+    <result column="is_good" property="isGood" jdbcType="DECIMAL" />
+    <result column="is_hot" property="isHot" jdbcType="DECIMAL" />
+    <result column="keywords" property="keywords" jdbcType="VARCHAR" />
+    <result column="is_del" property="isDel" jdbcType="DECIMAL" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="brand_id" property="brandId" jdbcType="INTEGER" />
+    <result column="category_id" property="categoryId" jdbcType="INTEGER" />
+    <result column="opt_user" property="optUser" jdbcType="INTEGER" />
+    <result column="opt_date" property="optDate" jdbcType="TIMESTAMP" />
+    <result column="opt_term" property="optTerm" jdbcType="VARCHAR" />
+    <result column="sales_count" property="salesCount" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    goods_id, name, code, remark, tag_img_id, price, is_new, is_good, is_hot, keywords, 
+    is_del, create_time, brand_id, category_id, opt_user, opt_date, opt_term, sales_count,uuid
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from goods
+    where goods_id = #{goodsId,jdbcType=INTEGER}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from goods
+    where goods_id = #{goodsId}
+  </delete>
+  
+  <insert id="insert" parameterType="com.ync365.seed.bussiness.modules.goods.entity.Goods" useGeneratedKeys="true" keyProperty="goodsId" keyColumn="goods_id" >
+    insert into goods (goods_id, name, code, 
+      remark, tag_img_id, price, 
+      is_new, is_good, is_hot, 
+      keywords, is_del, create_time, 
+      brand_id, category_id, opt_user, 
+      opt_date, opt_term, sales_count,uuid
+      )
+    values (#{goodsId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{tagImgId,jdbcType=INTEGER}, #{price,jdbcType=DECIMAL}, 
+      #{isNew,jdbcType=DECIMAL}, #{isGood,jdbcType=DECIMAL}, #{isHot,jdbcType=DECIMAL}, 
+      #{keywords,jdbcType=VARCHAR}, #{isDel,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{brandId,jdbcType=INTEGER}, #{categoryId,jdbcType=INTEGER}, #{optUser,jdbcType=INTEGER}, 
+      #{optDate,jdbcType=TIMESTAMP}, #{optTerm,jdbcType=VARCHAR}, #{salesCount,jdbcType=INTEGER},
+      #{uuid,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+  <insert id="insertSelective" parameterType="com.ync365.seed.bussiness.modules.goods.entity.Goods" >
+    insert into goods
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="goodsId != null" >
+        goods_id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="tagImgId != null" >
+        tag_img_id,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="isNew != null" >
+        is_new,
+      </if>
+      <if test="isGood != null" >
+        is_good,
+      </if>
+      <if test="isHot != null" >
+        is_hot,
+      </if>
+      <if test="keywords != null" >
+        keywords,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="brandId != null" >
+        brand_id,
+      </if>
+      <if test="categoryId != null" >
+        category_id,
+      </if>
+      <if test="optUser != null" >
+        opt_user,
+      </if>
+      <if test="optDate != null" >
+        opt_date,
+      </if>
+      <if test="optTerm != null" >
+        opt_term,
+      </if>
+      <if test="salesNum != null" >
+        sales_num,
+      </if>
+      <if test="uuid != null" >
+        uuid
+      </if>
+     
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="goodsId != null" >
+        #{goodsId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="tagImgId != null" >
+        #{tagImgId,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="isNew != null" >
+        #{isNew,jdbcType=DECIMAL},
+      </if>
+      <if test="isGood != null" >
+        #{isGood,jdbcType=DECIMAL},
+      </if>
+      <if test="isHot != null" >
+        #{isHot,jdbcType=DECIMAL},
+      </if>
+      <if test="keywords != null" >
+        #{keywords,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="brandId != null" >
+        #{brandId,jdbcType=INTEGER},
+      </if>
+      <if test="categoryId != null" >
+        #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="optUser != null" >
+        #{optUser,jdbcType=INTEGER},
+      </if>
+      <if test="optDate != null" >
+        #{optDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="optTerm != null" >
+        #{optTerm,jdbcType=VARCHAR},
+      </if>
+      <if test="salesNum != null" >
+        #{salesNum,jdbcType=DECIMAL},
+      </if>
+      <if test="uuid != null" >
+        #{uuid,jdbcType=VARCHAR},
+      </if>
+     
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.ync365.seed.bussiness.modules.goods.entity.Goods" >
+    update goods
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="tagImgId != null" >
+        tag_img_id = #{tagImgId,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="isNew != null" >
+        is_new = #{isNew,jdbcType=DECIMAL},
+      </if>
+      <if test="isGood != null" >
+        is_good = #{isGood,jdbcType=DECIMAL},
+      </if>
+      <if test="isHot != null" >
+        is_hot = #{isHot,jdbcType=DECIMAL},
+      </if>
+      <if test="keywords != null" >
+        keywords = #{keywords,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="brandId != null" >
+        brand_id = #{brandId,jdbcType=INTEGER},
+      </if>
+      <if test="categoryId != null" >
+        category_id = #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="optUser != null" >
+        opt_user = #{optUser,jdbcType=INTEGER},
+      </if>
+      <if test="optDate != null" >
+        opt_date = #{optDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="optTerm != null" >
+        opt_term = #{optTerm,jdbcType=VARCHAR},
+      </if>
+      <if test="salesCount != null" >
+        sales_count = #{salesCount,jdbcType=DECIMAL},
+      </if>
+      <if test="uuid != null" >
+        uuid = #{uuid,jdbcType=VARCHAR},
+      </if>
+     
+    </set>
+    where goods_id = #{goodsId,jdbcType=INTEGER}
+  </update>
+  
+  <update id="updateByPrimaryKey" parameterType="com.ync365.seed.bussiness.modules.goods.entity.Goods" >
+    update goods
+    set name = #{name,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      tag_img_id = #{tagImgId,jdbcType=INTEGER},
+      price = #{price,jdbcType=DECIMAL},
+      is_new = #{isNew,jdbcType=DECIMAL},
+      is_good = #{isGood,jdbcType=DECIMAL},
+      is_hot = #{isHot,jdbcType=DECIMAL},
+      keywords = #{keywords,jdbcType=VARCHAR},
+      is_del = #{isDel,jdbcType=DECIMAL},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      brand_id = #{brandId,jdbcType=INTEGER},
+      category_id = #{categoryId,jdbcType=INTEGER},
+      opt_user = #{optUser,jdbcType=INTEGER},
+      opt_date = #{optDate,jdbcType=TIMESTAMP},
+      opt_term = #{optTerm,jdbcType=VARCHAR},
+      sales_count = #{salesCount,jdbcType=DECIMAL},
+      uuid = #{uuid,jdbcType=VARCHAR}
+    where goods_id = #{goodsId,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectPage" resultMap="BaseResultMap" parameterType="map">        
+        select
+			<include refid="Base_Column_List" />
+        from
+       	 goods g
+        <where>
+         <if test="name != null  and name != ''">
+           and name like concat('%',#{name},'%' ) 
+         </if>
+         <if test="code != null  and code != ''">
+           and code like concat('%',#{code},'%' ) 
+         </if>
+         <if test="categoryId != null  ">
+           and category_id = #{categoryId }
+         </if>
+         <if test="brandId != null  ">
+           and brand_id = #{brandId }
+         </if>
+        </where>
+        limit #{pageIndex}  ,   #{pageSize}
+    </select> 
+    
+    <!--     按条件查询交易记录数 -->
+    <select id="selectPageCount" resultType="Integer" parameterType="map">
+        select count(*) cnt  from goods 
+       <where>
+         <if test="name != null  and name != ''">
+           and name like concat('%',#{name},'%' ) 
+         </if>
+         <if test="code != null  and code != ''">
+           and code like concat('%',#{code},'%' ) 
+         </if>
+         <if test="categoryId != null  ">
+           and category_id = #{categoryId }
+         </if>
+          <if test="brandId != null  ">
+           and brand_id = #{brandId }
+         </if>
+       </where>
+    </select>
+    
+</mapper>

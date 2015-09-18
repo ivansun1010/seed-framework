@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ync365.seed.bussiness.modules.goods.dao.FeatureDao">
+	<resultMap id="BaseResultMap"
+		type="com.ync365.seed.bussiness.modules.goods.entity.Feature">
+		<id column="feature_id" property="featureId" jdbcType="INTEGER" />
+		<result column="category_id" property="categoryId" jdbcType="INTEGER" />
+		<result column="parent_id" property="parentId" jdbcType="INTEGER" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="is_alias" property="isAlias" jdbcType="DECIMAL" />
+		<result column="is_enum" property="isEnum" jdbcType="DECIMAL" />
+		<result column="is_input" property="isInput" jdbcType="DECIMAL" />
+		<result column="is_key" property="isKey" jdbcType="DECIMAL" />
+		<result column="is_sales" property="isSales" jdbcType="DECIMAL" />
+		<result column="is_query" property="isQuery" jdbcType="DECIMAL" />
+		<result column="is_must" property="isMust" jdbcType="DECIMAL" />
+		<result column="is_spec" property="isSpec" jdbcType="DECIMAL" />
+		<result column="is_multiselect" property="isMultiselect" jdbcType="DECIMAL" />
+		<result column="status" property="status" jdbcType="DECIMAL" />
+		<result column="seq" property="seq" jdbcType="DECIMAL" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="opt_user" property="optUser" jdbcType="INTEGER" />
+		<result column="opt_date" property="optDate" jdbcType="TIMESTAMP" />
+		<result column="opt_term" property="optTerm" jdbcType="VARCHAR" />
+		<result column="optionals" property="optionals" jdbcType="VARCHAR" />
+		<result column="feature_grade" property="featureGrade" jdbcType="DECIMAL" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		feature_id, category_id, parent_id,name, is_alias, is_enum, is_input, is_key, is_sales,
+		is_query,
+		is_must, is_spec, is_multiselect, status, seq, create_time, opt_user,
+		opt_date, opt_term,optionals,feature_grade
+	</sql>
+	
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from goods_feature
+		where feature_id = #{featureId,jdbcType=INTEGER}
+	</select>
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from goods_feature
+		where feature_id = #{featureId,jdbcType=INTEGER}
+	</delete>
+	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="featureId"
+	parameterType="com.ync365.seed.bussiness.modules.goods.entity.Feature">
+	insert into goods_feature (category_id, parent_id ,name,
+	is_alias, is_enum, is_input,
+	is_key, is_sales, is_query,
+	is_must, is_spec, is_multiselect,
+	status, seq, create_time,
+	opt_user, opt_date, opt_term,optionals,feature_grade
+	)
+	values ( #{categoryId,jdbcType=INTEGER},#{parentId,jdbcType=INTEGER},
+	#{name,jdbcType=VARCHAR},
+	#{isAlias,jdbcType=DECIMAL}, #{isEnum,jdbcType=DECIMAL}, #{isInput,jdbcType=DECIMAL},
+	#{isKey,jdbcType=DECIMAL}, #{isSales,jdbcType=DECIMAL},
+	#{isQuery,jdbcType=DECIMAL},
+	#{isMust,jdbcType=DECIMAL}, #{isSpec,jdbcType=DECIMAL}, #{isMultiselect,jdbcType=DECIMAL},
+	#{status,jdbcType=DECIMAL}, #{seq,jdbcType=DECIMAL},
+	#{createTime,jdbcType=TIMESTAMP},
+	#{optUser,jdbcType=INTEGER}, #{optDate,jdbcType=TIMESTAMP}, #{optTerm,jdbcType=VARCHAR},
+	#{optionals,jdbcType=VARCHAR},#{featureGrade,jdbcType=DECIMAL}
+	)
+	<selectKey resultType="java.lang.Integer"  order="AFTER" keyProperty="featureId" >
+        SELECT LAST_INSERT_ID() AS ID   
+    </selectKey>
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.ync365.seed.bussiness.modules.goods.entity.Feature">
+		insert into goods_feature
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="featureId != null">
+				feature_id,
+			</if>
+			<if test="categoryId != null">
+				category_id,
+			</if>
+			<if test="parentId != null">
+				parent_id,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="isAlias != null">
+				is_alias,
+			</if>
+			<if test="isEnum != null">
+				is_enum,
+			</if>
+			<if test="isInput != null">
+				is_input,
+			</if>
+			<if test="isKey != null">
+				is_key,
+			</if>
+			<if test="isSales != null">
+				is_sales,
+			</if>
+			<if test="isQuery != null">
+				is_query,
+			</if>
+			<if test="isMust != null">
+				is_must,
+			</if>
+			<if test="isSpec != null">
+				is_spec,
+			</if>
+			<if test="isMultiselect != null">
+				is_multiselect,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="seq != null">
+				seq,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="optUser != null">
+				opt_user,
+			</if>
+			<if test="optDate != null">
+				opt_date,
+			</if>
+			<if test="optTerm != null">
+				opt_term,
+			</if>
+			<if test="optionals != null">
+				optionals,
+			</if>
+			<if test="featureGrade != null">
+				feature_grade,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="featureId != null">
+				#{featureId,jdbcType=INTEGER},
+			</if>
+			<if test="categoryId != null">
+				#{categoryId,jdbcType=INTEGER},
+			</if>
+			<if test="parentId != null">
+				#{parentId,jdbcType=INTEGER},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="isAlias != null">
+				#{isAlias,jdbcType=DECIMAL},
+			</if>
+			<if test="isEnum != null">
+				#{isEnum,jdbcType=DECIMAL},
+			</if>
+			<if test="isInput != null">
+				#{isInput,jdbcType=DECIMAL},
+			</if>
+			<if test="isKey != null">
+				#{isKey,jdbcType=DECIMAL},
+			</if>
+			<if test="isSales != null">
+				#{isSales,jdbcType=DECIMAL},
+			</if>
+			<if test="isQuery != null">
+				#{isQuery,jdbcType=DECIMAL},
+			</if>
+			<if test="isMust != null">
+				#{isMust,jdbcType=DECIMAL},
+			</if>
+			<if test="isSpec != null">
+				#{isSpec,jdbcType=DECIMAL},
+			</if>
+			<if test="isMultiselect != null">
+				#{isMultiselect,jdbcType=DECIMAL},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=DECIMAL},
+			</if>
+			<if test="seq != null">
+				#{seq,jdbcType=DECIMAL},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="optUser != null">
+				#{optUser,jdbcType=INTEGER},
+			</if>
+			<if test="optDate != null">
+				#{optDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="optTerm != null">
+				#{optTerm,jdbcType=VARCHAR},
+			</if>
+			<if test="optionals != null">
+				#{optionals,jdbcType=VARCHAR},
+			</if>
+			<if test="featureGrade != null">
+				#{featureGrade,jdbcType=DECIMAL},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.ync365.seed.bussiness.modules.goods.entity.Feature">
+		update goods_feature
+		<set>
+			<if test="categoryId != null">
+				category_id = #{categoryId,jdbcType=INTEGER},
+			</if>
+			<if test="parentId != null">
+				parent_id = #{parentId,jdbcType=INTEGER},
+			</if>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="isAlias != null">
+				is_alias = #{isAlias,jdbcType=DECIMAL},
+			</if>
+			<if test="isEnum != null">
+				is_enum = #{isEnum,jdbcType=DECIMAL},
+			</if>
+			<if test="isInput != null">
+				is_input = #{isInput,jdbcType=DECIMAL},
+			</if>
+			<if test="isKey != null">
+				is_key = #{isKey,jdbcType=DECIMAL},
+			</if>
+			<if test="isSales != null">
+				is_sales = #{isSales,jdbcType=DECIMAL},
+			</if>
+			<if test="isQuery != null">
+				is_query = #{isQuery,jdbcType=DECIMAL},
+			</if>
+			<if test="isMust != null">
+				is_must = #{isMust,jdbcType=DECIMAL},
+			</if>
+			<if test="isSpec != null">
+				is_spec = #{isSpec,jdbcType=DECIMAL},
+			</if>
+			<if test="isMultiselect != null">
+				is_multiselect = #{isMultiselect,jdbcType=DECIMAL},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=DECIMAL},
+			</if>
+			<if test="seq != null">
+				seq = #{seq,jdbcType=DECIMAL},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="optUser != null">
+				opt_user = #{optUser,jdbcType=INTEGER},
+			</if>
+			<if test="optDate != null">
+				opt_date = #{optDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="optTerm != null">
+				opt_term = #{optTerm,jdbcType=VARCHAR},
+			</if>
+			<if test="optionals != null">
+				optionals = #{optionals,jdbcType=VARCHAR},
+			</if>
+			<if test="featureGrade != null">
+				feature_grade = #{featureGrade,jdbcType=DECIMAL},
+			</if>
+		</set>
+		where feature_id = #{featureId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.ync365.seed.bussiness.modules.goods.entity.Feature">
+		update goods_feature
+		set category_id = #{categoryId,jdbcType=INTEGER},
+		parent_id = #{parentId,jdbcType=INTEGER},
+		name = #{name,jdbcType=VARCHAR},
+		is_alias = #{isAlias,jdbcType=DECIMAL},
+		is_enum = #{isEnum,jdbcType=DECIMAL},
+		is_input = #{isInput,jdbcType=DECIMAL},
+		is_key = #{isKey,jdbcType=DECIMAL},
+		is_sales = #{isSales,jdbcType=DECIMAL},
+		is_query = #{isQuery,jdbcType=DECIMAL},
+		is_must = #{isMust,jdbcType=DECIMAL},
+		is_spec = #{isSpec,jdbcType=DECIMAL},
+		is_multiselect = #{isMultiselect,jdbcType=DECIMAL},
+		status = #{status,jdbcType=DECIMAL},
+		seq = #{seq,jdbcType=DECIMAL},
+		create_time = #{createTime,jdbcType=TIMESTAMP},
+		opt_user = #{optUser,jdbcType=INTEGER},
+		opt_date = #{optDate,jdbcType=TIMESTAMP},
+		opt_term = #{optTerm,jdbcType=VARCHAR}
+		optionals = #{optionals,jdbcType=VARCHAR},
+		feature_grade = #{featureGrade}
+		where feature_id = #{featureId,jdbcType=INTEGER}
+	</update>
+
+	<select id="searchPage" resultMap="BaseResultMap" parameterType="map">
+		select
+		<include refid="Base_Column_List" />
+		from goods_feature gf
+		<where>
+			<if test="name != null and name !='null' and name != ''">
+				and name like '%${name}%'
+			</if>
+			<if test="isSpec != null">
+				and is_spec = ${isSpec}
+			</if>
+			<if test="categoryId != null">
+				and category_id = ${categoryId}
+			</if>
+		</where>
+		<if test="pageIndex != null and pageIndex != '' and pageSize != null and pageSize != ''">
+			limit #{pageIndex}  ,   #{pageSize}
+		</if>
+	</select>
+
+	<!-- 按条件查询交易记录数 -->
+	<select id="searchPageCount" resultType="Integer" parameterType="map">
+		select count(*) cnt from goods_feature
+		<where>
+			<if test="name != null and name !='null' and name != ''">
+				and name like concat('%',#{name},'%' )  
+			</if>
+		</where>
+	</select>
+	
+	<select id="getFeaturesBySpec" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+     select
+		<include refid="Base_Column_List" />
+     from
+       	 goods_feature gf
+     where gf.is_spec=#{specValue}
+    </select>
+	<select id="getParentFeatures" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+     select feature_id,name from goods_feature gf where gf.feature_grade=1 
+    </select>
+    
+    <select id="getAllFeatures" resultMap="BaseResultMap" >
+      select
+		<include refid="Base_Column_List" />
+     from
+       	 goods_feature  
+    </select>
+</mapper>

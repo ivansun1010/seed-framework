@@ -1,0 +1,738 @@
+<#assign ctx="${request.contextPath}" /> 
+<#assign staticCtx="${request.contextPath}/resources" />
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+<link rel="stylesheet" media="screen" type="text/css" href="${staticCtx}/jqGrid/css/ui.jqgrid.css" />
+<link rel="stylesheet" href="${staticCtx}/jqGrid/css/jquery-ui-1.9.2.custom.min.css" type="text/css">
+
+<!-- ueditor -->
+<script type="text/javascript" src="${staticCtx}/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" src="${staticCtx}/ueditor/ueditor.all.js"></script>
+<link rel="stylesheet" href="${staticCtx}/ueditor/themes/default/css/ueditor.css"/>
+<script type="text/javascript" src="${staticCtx}/ueditor/lang/zh-cn/zh-cn.js"></script> 
+
+<style>
+#infoCheck {
+	border: 1px solid #ccc;
+	padding: 10px;
+	width: 650px;
+}
+
+#infoSelect {
+	line-height: 30px;
+	border: 1px solid #ccc;
+}
+
+.infolistCon {
+	display: none;
+}
+
+.infolistCon {
+	margin-top: 10px;
+}
+
+.infolistCon label {
+	font-size: 12px;
+	margin-right: 10px;
+	line-height: 30px;
+}
+
+.infolistCon label input {
+	margin-right: 3px;
+}
+
+.addinput {
+	text-align: right;
+}
+
+.tablediv {
+	margin-top: 10px;
+}
+
+.tablediv table {
+	border-collapse: collapse;
+	width: 650px;
+}
+
+.tablediv table td {
+	border: 1px solid #ccc;
+	line-height: 20px;
+	text-align: center;
+	padding: 5px 0;
+}
+
+.tablediv table td span {
+	margin: 0 3px;
+}
+
+.aLinkTd a {
+	font-size: 12px;
+	margin: 0 3px;
+}
+.imgcss{
+	width:200px;
+	height:200px; 
+}
+</style>
+<script type="text/javascript" src="${staticCtx}/jqGrid/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="${staticCtx}/jqGrid/js/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="${staticCtx}/jqGrid/js/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="${staticCtx}/jqGrid/js/jquery-ui-1.9.2.custom.min.js"></script>
+	<script type="text/javascript">
+
+
+	var uestory=UE.getEditor('storyEditor');
+	function getContent(){
+		var arr = [];
+		arr.push(UE.getEditor('storyEditor').getContent());
+		var storytxt = arr.join("\n");
+		var st=storytxt.toString();
+		st=st.replace("<p>","");
+		st=st.replace("</p>","");
+		$("#goodsDesc").val(st);
+	}
+	
+	
+	
+	var th = "<td>商品货号</td><td>零售价</td><td>市场价</td><td>成本价</td><td>库存</td><td>最大购买数量</td><td>最小购买数量</td>";
+
+	function getTd(row) {
+		var  td = '<td><input type="text" name="goods.skus['+row+'].sku"/></td>'; 
+		td += '<td><input type="text" name="goods.skus['+row+'].sellPrice" /></td>';
+		td += '<td><input type="text" name="goods.skus['+row+'].marketPrice" /></td>';
+		td += '<td><input type="text" name="goods.skus['+row+'].costPrice" /></td>';
+		td += '<td><input type="text" name="goods.skus['+row+'].stockNum"/></td>';
+		td += '<td><input type="text" name="goods.skus['+row+'].upperLimit"/></td>';
+		td += '<td><input type="text" name="goods.skus['+row+'].lowerLimit"/></td>';
+		return td;
+	}
+
+	function addTr() {
+		var tr = $('#info_table1').find('tr');
+		var count = tr.length;
+
+		if (count == 1) {
+			var infoTableHtml = '';
+			var selTdKey = $('#tdKey1').find('span');
+			var selTdName = $('#tdName1').html();
+			var featureId = $('#tdName1').attr("name");
+			if (selTdKey.length > 0) {
+
+				infoTableHtml += '<table>';
+				infoTableHtml += '<tr>';
+				infoTableHtml += '<td>' + selTdName + '</td>';
+				infoTableHtml += th;
+				infoTableHtml += '</tr>';
+				var row = 0;
+				for (var i = 0; i < selTdKey.length; i++) {
+					row += 1;
+					infoTableHtml += '<tr>';
+					infoTableHtml += '<td> <input type="hidden" name="goods.skus['+row+'].skuFeatures[0].featureId" value="'+featureId+'"/> <input type="hidden" name="goods.skus['
+							+ row
+							+ '].skuFeatures[0].specValue" value="'
+							+ selTdKey.eq(i).html()
+							+ '"/> '
+							+ selTdKey.eq(i).html() + '</td>';
+					infoTableHtml += getTd(row);
+					infoTableHtml += '</tr>';
+				}
+				infoTableHtml += '</table>';
+			}
+			$('#info_table2').html(infoTableHtml);
+		}
+
+		if (count == 2) {
+			var infoTableHtml = '';
+			var selTdKey1 = $('#tdKey1').find('span');
+			var selTdName1 = $('#tdName1').html();
+			var selTdKey2 = $('#tdKey2').find('span');
+			var selTdName2 = $('#tdName2').html();
+			var featureId1 = $('#tdName1').attr("name");
+			var featureId2 = $('#tdName2').attr("name");
+
+			if (selTdKey1.length > 0 && selTdKey2.length > 0) {
+
+				infoTableHtml += '<table>';
+				infoTableHtml += '<tr>';
+				infoTableHtml += '<td>' + selTdName1 + '</td>';
+				infoTableHtml += '<td>' + selTdName2 + '</td>';
+				infoTableHtml += th;
+				infoTableHtml += '</tr>';
+				var row = 0;
+				for (var i = 0; i < selTdKey1.length; i++) {
+					for (var j = 0; j < selTdKey2.length; j++) {
+						row += 1;
+						infoTableHtml += '<tr>';
+						if (j == 0) {
+							infoTableHtml += '<td rowspan="'+selTdKey2.length+'">'
+									+ selTdKey1.eq(i).html() + '</td>';
+						}
+						infoTableHtml += '<td>  <input type="hidden" name="goods.skus['+row+'].skuFeatures[0].featureId" value="'+featureId1+'"/>   <input type="hidden" name="goods.skus['
+								+ row
+								+ '].skuFeatures[0].specValue" value="'
+								+ selTdKey1.eq(i).html()
+								+ '"/> '
+								+ ' <input type="hidden" name="goods.skus['+row+'].skuFeatures[1].featureId" value="'+featureId2+'"/>   <input type="hidden" name="goods.skus['
+								+ row
+								+ '].skuFeatures[1].specValue" value="'
+								+ selTdKey2.eq(j).html()
+								+ '"/> '
+								+ selTdKey2.eq(j).html() + '</td>';
+						infoTableHtml += getTd(row);
+						infoTableHtml += '</tr>';
+					}
+				}
+				infoTableHtml += '</table>';
+			}
+			$('#info_table2').html(infoTableHtml);
+
+		}
+		if (count == 3) {
+			var infoTableHtml = '';
+			var selTdKey1 = $('#tdKey1').find('span');
+			var selTdName1 = $('#tdName1').html();
+
+			var selTdKey2 = $('#tdKey2').find('span');
+			var selTdName2 = $('#tdName2').html();
+
+			var selTdKey3 = $('#tdKey3').find('span');
+			var selTdName3 = $('#tdName3').html();
+			var featureId1 = $('#tdName1').attr("name");
+			var featureId2 = $('#tdName2').attr("name");
+			var featureId3 = $('#tdName3').attr("name");
+
+			if (selTdKey1.length > 0 && selTdKey2.length > 0
+					&& selTdKey3.length > 0) {
+
+				infoTableHtml += '<table>';
+				infoTableHtml += '<tr>';
+				infoTableHtml += '<td>' + selTdName1 + '</td>';
+				infoTableHtml += '<td>' + selTdName2 + '</td>';
+				infoTableHtml += '<td>' + selTdName3 + '</td>';
+				infoTableHtml += th;
+				infoTableHtml += '</tr>';
+
+				var row = 0;
+				for (var i = 0; i < selTdKey1.length; i++) {
+					for (var j = 0; j < selTdKey2.length; j++) {
+						for (var m = 0; m < selTdKey3.length; m++) {
+							row += 1;
+							infoTableHtml += '<tr>';
+							if (j == 0 && m == 0) {
+								infoTableHtml += '<td rowspan="'
+										+ (selTdKey2.length * selTdKey3.length)
+										+ '"> ' + selTdKey1.eq(i).html()
+										+ '</td>';
+							}
+							if (m == 0) {
+								infoTableHtml += '<td rowspan="'+selTdKey3.length+'"> '
+										+ selTdKey2.eq(j).html() + '</td>';
+							}
+							infoTableHtml += '<td> <input type="hidden" name="goods.skus['+row+'].skuFeatures[0].featureId" value="'+featureId1+'"/>  <input type="hidden" name="goods.skus['
+									+ row
+									+ '].skuFeatures[0].specValue" value="'
+									+ selTdKey1.eq(i).html()
+									+ '"/> '
+									+ '<input type="hidden" name="goods.skus['+row+'].skuFeatures[1].featureId" value="'+featureId2+'"/>  <input type="hidden" name="goods.skus['
+									+ row
+									+ '].skuFeatures[1].specValue" value="'
+									+ selTdKey2.eq(j).html()
+									+ '"/>'
+									+ '<input type="hidden" name="goods.skus['+row+'].skuFeatures[2].featureId" value="'+featureId3+'"/>  <input type="hidden" name="goods.skus['
+									+ row
+									+ '].skuFeatures[2].specValue" value="'
+									+ selTdKey3.eq(m).html()
+									+ '"/> '
+									+ selTdKey3.eq(m).html() + '</td>';
+							infoTableHtml += getTd(row);
+							infoTableHtml += '</tr>';
+							
+						}
+
+					}
+
+				}
+				infoTableHtml += '</table>';
+			}
+			$('#info_table2').html(infoTableHtml);
+		}
+
+	}
+	
+	// 增加
+var addBtn=function(){
+	$('.addBtn')
+	.on(
+			'click',
+			function() {
+				var inputChecked = $(this).parents(
+						'.infolistCon').find(
+						'input[type=checkbox]:checked');
+
+				// 每次点击拼装tr数据
+				var attrNum = $(this).parents(
+						'.infolistCon').attr('attr-num');
+				var rowNum = $("#info_table1 tr").length;
+				var tdNum = rowNum + 1;
+
+				var featureId = $('#infoSelect').find(
+						'option:selected').attr("value");
+
+				var table1addHTML = '<tr attr-id="trId'+ tdNum +'"><td name='+featureId+' id="tdName'+ tdNum +'">'
+						+ $('#infoSelect').find(
+								'option:selected').text()
+						+ '</td><td id="tdKey'+ tdNum +'">';
+
+				for (var i = 0; i < inputChecked.length; i++) {
+					table1addHTML += '<span>'
+							+ inputChecked.eq(i).attr(
+									'attr-value')
+							+ '</span>';
+				}
+				table1addHTML += '</td><td class="aLinkTd"><input type="button" name="'+attrNum+'" value="删除" class="delBtn"></td></tr>';
+
+				// 判断是否选中
+				if (inputChecked.length == 0) {
+					alert('请至少选择一个属性');
+					return;
+				} else {
+					//alert($('#info_table1').html() == '');
+					$(this).parents('.infolistCon').find(
+							'input').attr('disabled', true);
+					// 判断是否第一次插入数据
+					if ($('#info_table1').html() == '') {
+						table1HTML = '<table></table>';
+						$('#info_table1').html(table1HTML);
+						$('#info_table1 > table').append(
+								table1addHTML);
+					} else {
+						$('#info_table1 > table').append(
+								table1addHTML);
+					}
+				}
+
+				addTr();
+
+				// 删除
+				$('.delBtn')
+						.on(
+								'click',
+								function() {
+									var table1RowCount = $("#info_table1 tr").length;
+									if (table1RowCount > 1) {
+										$(this).parents(
+												'tr')
+												.remove();
+										addTr();
+									} else {
+										$('#info_table1')
+												.empty();
+										$('#info_table2')
+												.empty();
+									}
+									var attr = $(this)
+											.attr("name");
+									$(
+											".infolistCon[attr-num="
+													+ attr
+													+ "]")
+											.find('input')
+											.attr(
+													'disabled',
+													false);
+
+								})
+
+			});
+	};
+</script>
+<script type="text/javascript">
+function ajaxFileUpload(fid,imgid) {
+	var uuid = $("#uuid").val();
+    $.ajaxFileUpload
+    (
+        {
+            url: '${ctx}/upload/uploadPic?id='+uuid+"&type=1", //用于文件上传的服务器端请求地址
+            secureuri: false, //一般设置为false
+            fileElementId: fid, //文件上传空间的id属性  <input type="file" id="file" name="file" />
+            dataType: 'HTML', //返回值类型 一般设置为json
+            success: function (data, status)  //服务器成功响应处理函数
+            {
+            	
+            	//显示上传图片
+                var pic=$.parseJSON(data);
+            
+                $("#"+imgid).attr("src", pic.realPath);
+                $("#uuid").val( pic.uuid);
+                
+                if (typeof (data.error) != 'undefined') {
+                    if (data.error != '') {
+                        alert(data.error);
+                    } else {
+                        alert(data.msg);
+                    }
+                }
+            },
+            error: function (data, status, e)//服务器响应失败处理函数
+            {
+                alert(e);
+            }
+        }
+    )
+    return false;
+}
+  
+</script>
+<script type="text/javascript">
+	var goods = {
+		skuNum : 0,
+		allfeature : "",
+		getFeatureByCategoryId : function(id) {
+			$.post("${ctx}/goods/getFeatureByCategoryId", {
+				"categoryId" : id
+			}, function(data) {
+				$("#ordinaryfeature").empty();
+				$("#infoSelect").empty();
+				$("#infoList").empty();
+				$("#info_table1").empty();
+				$("#info_table2").empty();
+				goods.allfeature = data;
+				goods.viewOrdinaryFeature($("#ordinaryfeature"));
+				goods.viewspecificationFeature(0);
+			}, "json")
+		},
+		viewOrdinaryFeature : function(jqobject) {
+			for ( var index in goods.allfeature) {
+				if (goods.allfeature[index].isSpec != 1) {
+					jqobject
+							.append(goods.allfeature[index].name
+									+ " <input type='hidden' name='goods.skuFeatures["+index+"].featureId' value='"+goods.allfeature[index].featureId+"'/>"
+									+ " <input type='text' name='goods.skuFeatures["+index+"].specValue'/>");
+				}
+
+			}
+		},
+		viewspecificationFeature : function(skuindex) {
+			var n = 0;
+			for ( var i in goods.allfeature) {
+				if (goods.allfeature[i].isSpec == 1) {
+					var optionHTML = '<option value="'+goods.allfeature[i].featureId+'">'
+							+ goods.allfeature[i].name + '</option>';
+					if (n == 0) {
+						optionHTML = "<option>请选择</option>" + optionHTML;
+					}
+					$('#infoSelect').append(optionHTML);
+
+					var infoListHTML = '';
+					if (n == 0) {
+						infoListHTML+= '<div class="infolistCon" attr-num="'+ n +'"/>';
+					}
+					infoListHTML += '<div class="infolistCon" attr-num="'+ n +'">';
+					for ( var j in goods.allfeature[i].featureValues) {
+						infoListHTML += '<label><input type="checkbox" attr-value="'+ goods.allfeature[i].featureValues[j].featureValue +'">'
+								+ goods.allfeature[i].featureValues[j].featureValue
+								+ '</label>'
+					}
+					infoListHTML += '<div class="addinput"><input type="button" name="" value="增加" class="addBtn"></div>';
+					infoListHTML += '</div>';
+					$('#infoList').append(infoListHTML);
+					n++;
+				}
+			}
+			addBtn();
+		}
+	};
+	$(
+			function() {
+				$("#goods_categoryId").change(function() {
+					goods.getFeatureByCategoryId($(this).val());
+				});
+				// 选择对应相应数据
+				$('#infoSelect').on('change', function() {
+					var _index = $(this).find('option:selected').index();
+					$('#infoList').children().hide();
+					$('#infoList').children().eq(_index).show();
+					var selectValue = $(this).find('option:selected').attr("value");
+					$("#info_table1").find("td[id^='tdName']").each(function(){
+						if($(this).attr("name")==selectValue){
+							$('#infoList').children().eq(_index).find('input').attr('disabled', true);
+						}
+					});
+				});
+				goods.allfeature=eval(${json});
+				goods.viewspecificationFeature();
+				$("#tabs").tabs();
+			});
+</script>
+
+<body>
+	<form action="${ctx}/goods/edit" method="post"
+		enctype="application/x-www-form-urlencoded">
+		<div id="tabs">
+			<ul>
+				<li><a href="#tabs-1">基本信息</a></li>
+				<li><a href="#tabs-2">商品详情</a></li>
+				<li><a href="#tabs-3">商品属性</a></li>
+				<li><a href="#tabs-4">商品规格</a></li>
+				<li><a href="#tabs-5">销售区域</a></li>
+				<li><a href="#tabs-6">拥金比例</a></li>
+			</ul>
+			<div id="tabs-1">
+		<input type="hidden" name="goods.goodsId" value="${model.goods.goodsId}"/>
+			<table>
+				<tbody>
+					<tr>
+						<td>品牌id</td>
+						<td>
+						<#list brandList as brand_s>
+							<#if model.goods.brandId==brand_s.brandId>
+								${brand_s.chName!''}
+							</#if>
+						</#list>
+						</select></td>
+					</tr>
+					<tr>
+						<td>分类id</td>
+						<td>
+						<#list categoryList as category>
+							<#if model.goods.categoryId==category.categoryId>
+								${category.name!''}
+							</#if>
+						</#list>
+					</tr>
+					<tr>
+						<td>商品名称</td>
+						<td><input type="text" name="goods.name" value="${model.goods.name}"/></td>
+					</tr>
+					<tr>
+						<td>商品编码</td>
+						<td><input type="text" name="goods.code" value="${model.goods.code}"/></td>
+					</tr>
+					<tr>
+						<td>描述</td>
+						<td><input type="text" name="goods.remark" value="${model.goods.remark}"/><input type="hidden" name="goods.uuid"  id="uuid" value="${model.goods.uuid!''}"/></td>
+					</tr>
+					
+					
+					<#list 0..4 as picNum>
+					<tr>
+					<td>
+					<#if picInfoList?? && picInfoList[picNum]??>
+						<input type="file" name="file${picNum+1}" id="file${picNum+1}"/><br/>
+						<img  id="img${picNum+1}" alt="" src="${picInfoList[picNum].picName!''}" class="imgcss">
+					<#else>
+						<input type="file" name="file${picNum+1}" id="file${picNum+1}"/><br/>
+						<img  id="img${picNum+1}" alt="" src="" class="imgcss">
+					</#if>
+					</td>
+					</tr>
+					</#list>
+
+					<tr>
+						<td>参考价格</td>
+						<td><input type="text" name="goods.price" value="${model.goods.price}"/></td>
+					</tr>
+					<tr>
+						<td>是否新品</td>
+						<td><input type="checkbox" name="goods.isNew" <#if (model.goods.isNew==1)> checked="checked" </#if> value="1" /></td>
+					</tr>
+					<tr>
+						<td>是否商品</td>
+						<td><input type="checkbox" name="goods.isGood" value="1"  <#if (model.goods.isGood==1)> checked="checked" </#if>/></td>
+					</tr>
+					<tr>
+						<td>是否热门</td>
+						<td><input type="checkbox" name="goods.isHot" value="1"  <#if (model.goods.isHot==1)> checked="checked" </#if> /></td>
+					</tr>
+					<tr>
+						<td>页面关键字</td>
+						<td><input type="text" name="goods.keywords" value="${model.goods.keywords}"/></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div id="tabs-2">
+			<div><input type="hidden" id="goodsDesc" name="blob.goodsDesc"/></div>
+			<div id="d2"><script type="text/plain" id="storyEditor" ><#if model.blob??>${model.blob.goodsDesc!''}</#if></script></div>
+		</div>
+		
+		  <div id="tabs-3">
+			<div id="ordinaryfeature">
+			<#assign featureIndex=0/>
+			<#assign featureSelect=false>
+			<#list model.features as feature>
+				<#if feature.isSpec!=1 && feature.featureValues??>
+					${feature.name}:
+					<#if feature.isMultiselect == 1>
+						<#list feature.featureValues as featureValue>
+							<#assign featureSelect=false>
+							<input type='hidden' name='goods.skuFeatures[${featureIndex}].featureId' value='${feature.featureId}'/>
+							<#if model.goods.skuFeatures??>
+								<#list model.goods.skuFeatures as skufeature>
+									<#if featureValue.featureValue==skufeature.specValue>
+										<#assign featureSelect=true>
+											<input type="hidden" name="goods.skuFeatures[${featureIndex}].tid" value="${skufeature.tid}"/>
+										<#break/>
+									</#if>
+								</#list>
+							</#if>
+							<input type='checkbox' id='goods_skuFeatures[${featureIndex}]_specValue' name='goods.skuFeatures[${featureIndex}].specValue' 
+							value='${featureValue.featureValue}' <#if featureSelect==true>checked/><#else>/><input type="hidden" name="goods.skuFeatures[${featureIndex}].tid" value=""/></#if>
+							<label for='goods_skuFeatures[${featureIndex}]_specValue'>${featureValue.featureValue}</label>
+							<#assign featureIndex=featureIndex+1/>
+						</#list>
+					<#else>
+						<#list feature.featureValues as featureValue>
+							<#assign featureSelect=false>
+							<input type='hidden' name='goods.skuFeatures[${featureIndex}].featureId' value='${feature.featureId}'/>
+							<#list model.goods.skuFeatures as skufeature>
+								<#if featureValue.featureValue==skufeature.specValue>
+								<#assign featureSelect=true>
+								<input type="hidden" name="goods.skuFeatures[${featureIndex}].tid" value="${skufeature.tid}"/>
+								<#break/>
+								</#if>
+							</#list>
+							<input type='radio' id='goods_skuFeatures[${featureIndex}]_specValue' name='goods.skuFeatures[${featureIndex}].specValue' 
+							value='${featureValue.featureValue}' <#if featureSelect==true>checked</#if>>
+							<label for='goods_skuFeatures[${featureIndex}]_specValue'>${featureValue.featureValue}</label>
+						</#list>
+						<#assign featureIndex=featureIndex+1/>
+					</#if>
+				</#if>
+			</#list>
+			</div>
+		</div>
+		
+		<div id="tabs-4">
+			<div title="商品规格" style="padding: 10px">
+				<div id="infoCheck">
+					<select name="" id="infoSelect"></select>
+					<div id="infoList"></div>
+				</div>
+	
+				<div id="info_table1" class="tablediv">
+					<table>
+						<tbody>
+						<#if featuresList??>
+						<#list featuresList as features>
+							<tr attr-id="trId${features_index+1}">
+								<td id="tdName${features_index+1}" name="${features.featureId!0}">${features.name!''}</td>
+								<td id="tdKey${features_index+1}">
+									<#if features.featureValues??>
+										<#list features.featureValues as featureValue >
+											<span>${featureValue.featureValue}</span>
+										</#list>
+									</#if>
+								</td>
+								<td class="aLinkTd">
+									<input type="button" name="0" value="删除" class="delBtn">
+								</td>
+							</tr>
+						</#list>
+						</#if>
+						</tbody>
+					</table>
+				</div>
+				<div id="info_table2" class="tablediv">
+				<#if (model.goods.skus?size>0)>
+					<table>
+						<tbody>
+							<tr>
+								<#list model.goods.skus[0].skuFeatures as skuFeatures >
+									<td>${skuFeatures.featureName}</td>
+								</#list>
+								<td>商品别名</td><td>价格</td><td>市场价格</td><td>库存</td><td>购买上限</td><td>购买下限</td><td>编码</td>
+							</tr>
+							<#assign skusSum=model.goods.skus?size />
+							<#assign featuresSum=featuresList?size-1 />
+							<#assign featuresCount = []/>
+							<#list 0..featuresSum as t>
+								<#assign featuresCount = featuresCount+[skusSum/featuresList[t].featureValues?size] />
+								<#assign skusSum = skusSum/featuresList[t].featureValues?size />
+							</#list>
+							<#list model.goods.skus as sku>
+								<#assign i=sku_index />
+								<tr>
+									<#list sku.skuFeatures as skuFeatures >
+										<#if i%featuresCount[skuFeatures_index]==0>
+											<td rowspan="${featuresCount[skuFeatures_index]}">${skuFeatures.specValue}</td>
+										</#if>
+									</#list>
+									<input type="hidden" name="goods.skus[${i}].skuId" value="${sku.skuId}"/>
+									<td><input type="text" name="goods.skus[${i}].sku" value="${sku.sku}"/></td>
+									<td><input type="text" name="goods.skus[${i}].sellPrice" value="${sku.sellPrice}"/></td>
+									<td><input type="text" name="goods.skus[${i}].marketPrice" value="${sku.marketPrice}"/></td>
+									<td><input type="text" name="goods.skus[${i}].costPrice" value="${sku.costPrice}"/></td>
+									<td><input type="text" name="goods.skus[${i}].stockNum" value="${sku.stockNum}"/></td>
+									<td><input type="text" name="goods.skus[${i}].upperLimit" value="${sku.upperLimit!0}"/></td>
+									<td><input type="text" name="goods.skus[${i}].lowerLimit" value="${sku.lowerLimit!0}"/></td>
+								</tr>
+							</#list>
+						</tbody>
+					</table>
+				</#if>
+				</div>
+			</div>
+		</div>
+		
+		<div  id="tabs-5">
+				<div title="销售区域" style="padding: 10px">
+					 <table>
+					 	<tr>
+					 		 <td colspan="2"></td>
+					 	</tr>
+					 	<#if regionList??>
+					 	<#list  regionList as region>
+					 	<#if region.level == 1 >
+					 	<tr>
+					 		<td><input name="region" type="checkbox" value="${region.id}" />${region.name}</td>
+					 		<td> <#list  regionList as regionSec> <#if regionSec.level == 2 && region.id == regionSec.pid ><input name="region" type="checkbox" value="${regionSec.id}" />${regionSec.name} </#if>    </#list> </td>
+					 	</tr>
+					 	</#if>
+					 	</#list>
+					 	</#if>
+					 </table>
+				</div>
+			</div>
+			
+			
+		<div  id="tabs-6">
+				<div title="拥金比例" style="padding: 10px">
+					 <table>
+					 	<tr>
+					 		<td>村站拥金</td>
+					 		<td><input name="holdGold.vsAmount" id="vsAmount"  value="${model.holdGold.vsAmount!0}"/>元</td>
+					 	</tr>
+					 	<tr>
+					 		<td>LC拥金</td>
+					 		<td><input name="holdGold.lcAmount" id="lcAmount" value="${model.holdGold.lcAmount!0}"/>元</td>
+					 	</tr>
+					 	<tr>
+					 		<td>工程师拥金</td>
+					 		<td><input name="holdGold.engineerAmount" id="engineerAmount" value="${model.holdGold.engineerAmount!0}"/>元</td>
+					 	</tr>
+					 	<tr>
+					 		<td>A+组长拥金</td>
+					 		<td><input name="holdGold.aAmount" id="aAmount" value="${model.holdGold.aAmount!0}"/>元</td>
+					 	</tr>
+					 	<tr>
+					 		<td>供应商拥金</td>
+					 		<td><input name="holdGold.supplierAmount" id="supplierAmount" value="${model.holdGold.supplierAmount!0}"/>元</td>
+					 	</tr>
+					 </table>
+				</div>
+			</div>
+ 
+		<div>
+			<input type="submit" value="提交" onclick="return getContent();"/> &nbsp;&nbsp;&nbsp; <input
+				type="button"
+				onclick="javascript:window.location.href='${ctx}/goods/list';"
+				value="返回列表">
+		</div>
+	</form>
+</body>
+
+</html>

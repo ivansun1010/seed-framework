@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ync365.seed.bussiness.modules.user.dao.SysUserAttentionCategoryMapper" >
+  <resultMap id="BaseResultMap" type="com.ync365.seed.bussiness.modules.user.entity.SysUserAttentionCategory" >
+    <result column="user_num" property="userNum" jdbcType="VARCHAR" />
+    <result column="category_id" property="categoryId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List">
+	  user_num,category_id
+	</sql>
+  
+  <insert id="insertSelective" parameterType="com.ync365.seed.bussiness.modules.user.entity.SysUserAttentionCategory" >
+    insert into sys_user_attention_category
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userNum != null" >
+        user_num,
+      </if>
+      <if test="categoryId != null" >
+        category_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userNum != null" >
+        #{userNum,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryId != null" >
+        #{categoryId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  
+  
+  <delete id="deleteByUserNumm" parameterType="java.lang.String">
+		delete from
+		sys_user_attention_category
+		where  user_num = #{userNum,jdbcType=VARCHAR}
+	</delete>
+	
+	<update id="update" parameterType="com.ync365.seed.bussiness.modules.user.entity.SysUserAttentionCategory">
+		update sys_user_attention_category
+		<set>
+			<if test="userNum != null">
+				user_num= #{userNum,jdbcType=VARCHAR},
+			</if>
+			<if test="categoryId != null">
+				category_id= #{categoryId,jdbcType=INTEGER},
+			</if>
+		</set>
+	</update>
+	
+	<select id="selectPageByMap" parameterType="map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from sys_user_attention_category
+		<where>
+			<if test="userNum != null">
+				user_num= #{userNum,jdbcType=VARCHAR}
+			</if>
+			<if test="categoryId != null">
+				category_id= #{categoryId,jdbcType=INTEGER}
+			</if>
+		</where>
+	</select>
+</mapper>

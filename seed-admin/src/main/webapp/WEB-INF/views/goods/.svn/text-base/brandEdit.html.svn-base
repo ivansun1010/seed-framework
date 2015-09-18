@@ -1,0 +1,91 @@
+<#assign ctx="${request.contextPath}" />
+<#assign staticCtx="${request.contextPath}/resources" />
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> 
+<html>
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head>
+<script type="text/javascript" src="${staticCtx}/jqGrid/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="${staticCtx}/jqGrid/js/jquery.form.js"></script>
+
+<script type="text/javascript" src="${staticCtx}/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" src="${staticCtx}/ueditor/ueditor.all.js"></script>
+<link rel="stylesheet" href="${staticCtx}/ueditor/themes/default/css/ueditor.css"/>
+<script type="text/javascript" src="${staticCtx}/ueditor/lang/zh-cn/zh-cn.js"></script> 
+<script type="text/javascript">
+ 
+var uestory=UE.getEditor('storyEditor');
+function getContent(){
+	var arr = [];
+	arr.push(UE.getEditor('storyEditor').getContent());
+	var storytxt = arr.join("\n");
+	var st=storytxt.toString();
+	st=st.replace("<p>","");
+	st=st.replace("</p>","");
+	$("#story").val(st);
+}
+</script>
+<script type="text/javascript">
+function submitUpload(){
+	var option = {
+		url : "${ctx}/upload/uploadPic",
+		type : "post",
+		dateType : "json",
+		success : function(responseText) {
+			var jsonObj = $.parseJSON(responseText);
+			$("#imgsImgSrc").attr("src", jsonObj.realPath);
+			$("#logo").val(jsonObj.relativePath);
+			$("#uuid").val(jsonObj.uuid);
+		},
+		error : function() {
+			alert("系统错误");
+		}
+	};
+	 
+	//ajax方式提交表单，页面不会跳转（由jQuery-form提供）
+	$("#brandFormAdd").ajaxSubmit(option);
+	 
+}
+</script> 
+
+<body>
+	<form id="brandFormAdd" action="${ctx}/brand/edit" method="post" enctype="multipart/form-data">
+		<div><input type="hidden" id="brandId" name="brandId" value="${brand.brandId}"/></div>
+		
+		<div><span>品牌中文名称：</span></div>
+		<div><input type="text" id="chName" name="chName" value="${brand.chName}"/></div>
+		
+		<div><span>品牌缩写：</span></div>
+		<div><input type="text" id="enName" name="enName" value="${brand.enName}"/></div>
+		
+		<div><span>品牌描述：</span></div>
+		<div><input type="text" id="remark" name="remark" value="${brand.remark}"/></div>
+		
+		<div><span>品牌LOGO：</span></div>
+		<div><input type="hidden" id="logo" name="logo" value="${brand.logo}"/></div>
+		<img id="imgsImgSrc" src="/seed-admin${brand.logo}" height="100" width="100"/>
+		<div style="margin-bottom:20px">选择图片：<input type="file" id="myfiles" name="myfiles"  onchange="submitUpload();" /></div>
+	
+		<div><span>排序号：</span></div>
+		<div><input type="text" id="seq" name="seq" value="${brand.seq}"/></div>
+		
+		<div><span>状态：</span></div>
+		<div><input   type="radio" id="status"	name="status" value="1" <#if (brand.status==1)> checked="checked" </#if>  />是 
+			<input   type="radio" id="status" name="status" value="2"  <#if (brand.status==2)> checked="checked" </#if>  />否
+			<p>(当前品牌下还没有商品的时候,首页及分类页的品牌区将不会显示该品牌.)</p> 
+		</div>
+		 
+			
+		<div><span>品牌官方地址：</span></div>
+		<div><input type="text" id="address" name="address" value="${brand.address}"/></div>
+		
+		<div><span>品牌故事：</span></div>
+		<div><input type="hidden" id="story" name="story" value="${brand.story}"/></div>
+		<div id="d2"><script type="text/plain" id="storyEditor" >
+		${brand.story}
+		</script></div>
+		
+		<div><input type="submit" value="保存" onclick="getContent();"/>
+             <input type="button" value="取消"  onclick="history.back();"/>
+        </div>
+	</form>
+</body>
+</html>

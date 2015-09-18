@@ -1,0 +1,821 @@
+<#assign ctx="${request.contextPath}" /> <#assign
+staticCtx="${request.contextPath}/resources" />
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+<link rel="stylesheet" media="screen" type="text/css" href="${staticCtx}/jqGrid/css/ui.jqgrid.css" />
+<link rel="stylesheet" href="${staticCtx}/zTree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+<link rel="stylesheet" href="${staticCtx}/jqGrid/css/jquery-ui-1.9.2.custom.min.css" type="text/css">
+<link rel="stylesheet" href="${staticCtx}/zTree/css/demo.css" type="text/css">
+
+<!-- ueditor -->
+<script type="text/javascript" src="${staticCtx}/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" src="${staticCtx}/ueditor/ueditor.all.js"></script>
+<link rel="stylesheet" href="${staticCtx}/ueditor/themes/default/css/ueditor.css"/>
+<script type="text/javascript" src="${staticCtx}/ueditor/lang/zh-cn/zh-cn.js"></script> 
+
+<style>
+#infoCheck {
+	border: 1px solid #ccc;
+	padding: 10px;
+	width: 650px;
+}
+
+#infoSelect {
+	line-height: 30px;
+	border: 1px solid #ccc;
+}
+
+.infolistCon {
+	display: none;
+}
+
+.infolistCon {
+	margin-top: 10px;
+}
+
+.infolistCon label {
+	font-size: 12px;
+	margin-right: 10px;
+	line-height: 30px;
+}
+
+.infolistCon label input {
+	margin-right: 3px;
+}
+
+.addinput {
+	text-align: right;
+}
+
+.tablediv {
+	margin-top: 10px;
+}
+
+.tablediv table {
+	border-collapse: collapse;
+	width: 650px;
+}
+
+.tablediv table td {
+	border: 1px solid #ccc;
+	line-height: 20px;
+	text-align: center;
+	padding: 5px 0;
+}
+
+.tablediv table td span {
+	margin: 0 3px;
+}
+
+.aLinkTd a {
+	font-size: 12px;
+	margin: 0 3px;
+}
+.imgcss{
+	width:200px;
+	height:200px; 
+}
+</style>
+
+<script type="text/javascript" src="${staticCtx}/jqGrid/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="${staticCtx}/jqGrid/js/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="${staticCtx}/jqGrid/js/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="${staticCtx}/jqGrid/js/jquery-ui-1.9.2.custom.min.js"></script>
+<script type="text/javascript" src="${staticCtx}/js/ajaxfileupload.js"></script>
+<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="${staticCtx}/fileupload/jquery.ui.widget.js"></script>
+<script type="text/javascript" src="${staticCtx}/fileupload/jquery.iframe-transport.js"></script>
+<script type="text/javascript" src="${staticCtx}/zTree/js/jquery.ztree.core-3.5.js"></script>
+<script type="text/javascript" src="${staticCtx}/zTree/js/jquery.ztree.excheck-3.5.js"></script>
+<script type="text/javascript" src="${staticCtx}/zTree/js/jquery.ztree.exedit-3.5.js"></script> 
+<script type="text/javascript" src="${staticCtx}/zTree/js/jquery.ztree.exhide-3.5.js"></script>
+	<script type="text/javascript">
+	
+	var uestory=UE.getEditor('storyEditor');
+	function getContent(){
+		var arr = [];
+		arr.push(UE.getEditor('storyEditor').getContent());
+		var storytxt = arr.join("\n");
+		var st=storytxt.toString();
+		st=st.replace("<p>","");
+		st=st.replace("</p>","");
+		$("#goodsDesc").val(st);
+	}
+	
+	var th = "<td>商品货号</td><td>零售价</td><td>市场价</td><td>成本价</td><td>库存</td><td>最大购买数量</td><td>最小购买数量</td>";
+
+	function getTd(row) {
+		var  td = '<td><input type="text" name="goods.skus['+row+'].sku"/></td>'; 
+		td += '<td><input type="text" name="goods.skus['+row+'].sellPrice" /></td>';
+		td += '<td><input type="text" name="goods.skus['+row+'].marketPrice" /></td>';
+		td += '<td><input type="text" name="goods.skus['+row+'].costPrice" /></td>';
+		td += '<td><input type="text" name="goods.skus['+row+'].stockNum"/></td>';
+		td += '<td><input type="text" name="goods.skus['+row+'].upperLimit"/></td>';
+		td += '<td><input type="text" name="goods.skus['+row+'].lowerLimit"/></td>';
+		return td;
+	}
+
+	function addTr() {
+		var tr = $('#info_table1').find('tr');
+		var count = tr.length;
+
+		if (count == 1) {
+			var infoTableHtml = '';
+			var selTdKey = $('#tdKey1').find('span');
+			var selTdName = $('#tdName1').html();
+			var featureId = $('#tdName1').attr("name");
+			if (selTdKey.length > 0) {
+
+				infoTableHtml += '<table>';
+				infoTableHtml += '<tr>';
+				infoTableHtml += '<td>' + selTdName + '</td>';
+				infoTableHtml += th;
+				infoTableHtml += '</tr>';
+				var row = 0;
+				for (var i = 0; i < selTdKey.length; i++) {
+					infoTableHtml += '<tr>';
+					infoTableHtml += '<td> <input type="hidden" name="goods.skus['+row+'].skuFeatures[0].featureId" value="'+featureId+'"/> <input type="hidden" name="goods.skus['
+							+ row
+							+ '].skuFeatures[0].specValue" value="'
+							+ selTdKey.eq(i).html()
+							+ '"/> '
+							+ selTdKey.eq(i).html() + '</td>';
+					infoTableHtml += getTd(row);
+					infoTableHtml += '</tr>';
+					row += 1;
+				}
+				infoTableHtml += '</table>';
+			}
+			$('#info_table2').html(infoTableHtml);
+		}
+
+		if (count == 2) {
+			var infoTableHtml = '';
+			var selTdKey1 = $('#tdKey1').find('span');
+			var selTdName1 = $('#tdName1').html();
+			var selTdKey2 = $('#tdKey2').find('span');
+			var selTdName2 = $('#tdName2').html();
+			var featureId1 = $('#tdName1').attr("name");
+			var featureId2 = $('#tdName2').attr("name");
+
+			if (selTdKey1.length > 0 && selTdKey2.length > 0) {
+
+				infoTableHtml += '<table>';
+				infoTableHtml += '<tr>';
+				infoTableHtml += '<td>' + selTdName1 + '</td>';
+				infoTableHtml += '<td>' + selTdName2 + '</td>';
+				infoTableHtml += th;
+				infoTableHtml += '</tr>';
+				var row = 0;
+				for (var i = 0; i < selTdKey1.length; i++) {
+					for (var j = 0; j < selTdKey2.length; j++) {
+						infoTableHtml += '<tr>';
+						if (j == 0) {
+							infoTableHtml += '<td rowspan="'+selTdKey2.length+'">'
+									+ selTdKey1.eq(i).html() + '</td>';
+						}
+						infoTableHtml += '<td>  <input type="hidden" name="goods.skus['+row+'].skuFeatures[0].featureId" value="'+featureId1+'"/>   <input type="hidden" name="goods.skus['
+								+ row
+								+ '].skuFeatures[0].specValue" value="'
+								+ selTdKey1.eq(i).html()
+								+ '"/> '
+								+ ' <input type="hidden" name="goods.skus['+row+'].skuFeatures[1].featureId" value="'+featureId2+'"/>   <input type="hidden" name="goods.skus['
+								+ row
+								+ '].skuFeatures[1].specValue" value="'
+								+ selTdKey2.eq(j).html()
+								+ '"/> '
+								+ selTdKey2.eq(j).html() + '</td>';
+						infoTableHtml += getTd(row);
+						infoTableHtml += '</tr>';
+						row += 1;
+					}
+				}
+				infoTableHtml += '</table>';
+			}
+			$('#info_table2').html(infoTableHtml);
+
+		}
+		if (count == 3) {
+			var infoTableHtml = '';
+			var selTdKey1 = $('#tdKey1').find('span');
+			var selTdName1 = $('#tdName1').html();
+
+			var selTdKey2 = $('#tdKey2').find('span');
+			var selTdName2 = $('#tdName2').html();
+
+			var selTdKey3 = $('#tdKey3').find('span');
+			var selTdName3 = $('#tdName3').html();
+			var featureId1 = $('#tdName1').attr("name");
+			var featureId2 = $('#tdName2').attr("name");
+			var featureId3 = $('#tdName3').attr("name");
+
+			if (selTdKey1.length > 0 && selTdKey2.length > 0
+					&& selTdKey3.length > 0) {
+
+				infoTableHtml += '<table>';
+				infoTableHtml += '<tr>';
+				infoTableHtml += '<td>' + selTdName1 + '</td>';
+				infoTableHtml += '<td>' + selTdName2 + '</td>';
+				infoTableHtml += '<td>' + selTdName3 + '</td>';
+				infoTableHtml += th;
+				infoTableHtml += '</tr>';
+
+				var row = 0;
+				for (var i = 0; i < selTdKey1.length; i++) {
+					for (var j = 0; j < selTdKey2.length; j++) {
+						for (var m = 0; m < selTdKey3.length; m++) {
+							infoTableHtml += '<tr>';
+							if (j == 0 && m == 0) {
+								infoTableHtml += '<td rowspan="'
+										+ (selTdKey2.length * selTdKey3.length)
+										+ '"> ' + selTdKey1.eq(i).html()
+										+ '</td>';
+							}
+							if (m == 0) {
+								infoTableHtml += '<td rowspan="'+selTdKey3.length+'"> '
+										+ selTdKey2.eq(j).html() + '</td>';
+							}
+							infoTableHtml += '<td> <input type="hidden" name="goods.skus['+row+'].skuFeatures[0].featureId" value="'+featureId1+'"/>  <input type="hidden" name="goods.skus['
+									+ row
+									+ '].skuFeatures[0].specValue" value="'
+									+ selTdKey1.eq(i).html()
+									+ '"/> '
+									+ '<input type="hidden" name="goods.skus['+row+'].skuFeatures[1].featureId" value="'+featureId2+'"/>  <input type="hidden" name="goods.skus['
+									+ row
+									+ '].skuFeatures[1].specValue" value="'
+									+ selTdKey2.eq(j).html()
+									+ '"/>'
+									+ '<input type="hidden" name="goods.skus['+row+'].skuFeatures[2].featureId" value="'+featureId3+'"/>  <input type="hidden" name="goods.skus['
+									+ row
+									+ '].skuFeatures[2].specValue" value="'
+									+ selTdKey3.eq(m).html()
+									+ '"/> '
+									+ selTdKey3.eq(m).html() + '</td>';
+							infoTableHtml += getTd(row);
+							infoTableHtml += '</tr>';
+							row += 1;
+
+						}
+
+					}
+
+				}
+				infoTableHtml += '</table>';
+			}
+			$('#info_table2').html(infoTableHtml);
+		}
+
+	}
+	
+	// 增加
+var addBtn=function(){
+	$('.addBtn')
+	.on(
+			'click',
+			function() {
+				var inputChecked = $(this).parents(
+						'.infolistCon').find(
+						'input[type=checkbox]:checked');
+
+				// 每次点击拼装tr数据
+				var attrNum = $(this).parents(
+						'.infolistCon').attr('attr-num');
+				var rowNum = $("#info_table1 tr").length;
+				var tdNum = rowNum + 1;
+
+				var featureId = $('#infoSelect').find(
+						'option:selected').attr("value");
+
+				var table1addHTML = '<tr attr-id="trId'+ tdNum +'"><td name='+featureId+' id="tdName'+ tdNum +'">'
+						+ $('#infoSelect').find(
+								'option:selected').text()
+						+ '</td><td id="tdKey'+ tdNum +'">';
+
+				for (var i = 0; i < inputChecked.length; i++) {
+					table1addHTML += '<span>'
+							+ inputChecked.eq(i).attr(
+									'attr-value')
+							+ '</span>';
+				}
+				table1addHTML += '</td><td class="aLinkTd"><input type="button" name="'+attrNum+'" value="删除" class="delBtn"></td></tr>';
+
+				// 判断是否选中
+				if (inputChecked.length == 0) {
+					alert('请至少选择一个属性');
+					return;
+				} else {
+					//alert($('#info_table1').html() == '');
+					$(this).parents('.infolistCon').find(
+							'input').attr('disabled', true);
+					// 判断是否第一次插入数据
+					if ($('#info_table1').html() == '') {
+						table1HTML = '<table></table>';
+						$('#info_table1').html(table1HTML);
+						$('#info_table1 > table').append(
+								table1addHTML);
+					} else {
+						$('#info_table1 > table').append(
+								table1addHTML);
+					}
+				}
+
+				addTr();
+
+				// 删除
+				$('.delBtn')
+						.on(
+								'click',
+								function() {
+									var table1RowCount = $("#info_table1 tr").length;
+									if (table1RowCount > 1) {
+										$(this).parents(
+												'tr')
+												.remove();
+										addTr();
+									} else {
+										$('#info_table1')
+												.empty();
+										$('#info_table2')
+												.empty();
+									}
+									var attr = $(this)
+											.attr("name");
+									$(
+											".infolistCon[attr-num="
+													+ attr
+													+ "]")
+											.find('input')
+											.attr(
+													'disabled',
+													false);
+
+								})
+
+			});
+	};
+</script>
+<script type="text/javascript">
+function ajaxFileUpload(fid,imgid) {
+	
+	var uuid = $("#uuid").val();
+    $.ajaxFileUpload
+    (
+        {
+            url: '${ctx}/upload/uploadPic?id='+uuid+"&type=1", //用于文件上传的服务器端请求地址
+            secureuri: false, //一般设置为false
+            fileElementId: fid, //文件上传空间的id属性  <input type="file" id="file" name="file" />
+            dataType: 'HTML', //返回值类型 一般设置为json
+            success: function (data, status)  //服务器成功响应处理函数
+            {
+            	
+            	//显示上传图片
+                var pic=$.parseJSON(data);
+            
+                $("#"+imgid).attr("src", pic.realPath);
+                $("#uuid").val( pic.uuid);
+                
+                if (typeof (data.error) != 'undefined') {
+                    if (data.error != '') {
+                        alert(data.error);
+                    } else {
+                        alert(data.msg);
+                    }
+                }
+            },
+            error: function (data, status, e)//服务器响应失败处理函数
+            {
+                alert(e);
+            }
+        }
+    )
+    return false;
+}
+  
+</script>
+<script type="text/javascript">
+	var goods = {
+		skuNum : 0,
+		allfeature : "",
+		getFeatureByCategoryId : function(id) {
+			$.post("${ctx}/goods/getFeatureByCategoryId", {
+				"categoryId" : id
+			}, function(data) {
+				$("#ordinaryfeature").empty();
+				$("#infoSelect").empty();
+				$("#infoList").empty();
+				$("#info_table1").empty();
+				$("#info_table2").empty();
+				goods.allfeature = data;
+				goods.viewOrdinaryFeature($("#ordinaryfeature"));
+				goods.viewspecificationFeature(0);
+				//alert(data);
+			}, "json")
+		},
+		viewOrdinaryFeature : function(jqobject) {
+			var featureIndex = 0;
+			for ( var index in goods.allfeature) {
+				if (goods.allfeature[index].isSpec != 1) {
+					var featureHtml = "";
+					
+					if(goods.allfeature[index].isInput == 1){
+						featureHtml = goods.allfeature[index].name
+						+ " <input type='hidden' name='goods.skuFeatures["+featureIndex+"].featureId' value='"+goods.allfeature[index].featureId+"'/>"
+						+ " <input type='text' name='goods.skuFeatures["+featureIndex+"].specValue'/>";
+						featureIndex++;
+					}else{
+						if(goods.allfeature[index].isMultiselect == 1){
+							
+							if(goods.allfeature[index].featureValues!=null){
+								featureHtml = goods.allfeature[index].name;
+								$.each(goods.allfeature[index].featureValues,function(n,value){
+									featureHtml = featureHtml+"<input type='hidden' name='goods.skuFeatures["+featureIndex+"].featureId' value='"
+									+goods.allfeature[index].featureId+"'/>"+"<input type='checkbox' id='goods_skuFeatures["
+									+featureIndex+"]_specValue"+n+"' name='goods.skuFeatures["+featureIndex+"].specValue' value='"
+									+value.featureValue+"'><label for='goods_skuFeatures["+featureIndex+"]_specValue"+n+"'>"+value.featureValue+'</label>';
+									featureIndex++;
+								});
+							}
+						}else{
+							if(goods.allfeature[index].featureValues!=null){
+								featureHtml = goods.allfeature[index].name;
+								
+								$.each(goods.allfeature[index].featureValues,function(n,value){
+									featureHtml = featureHtml+ " <input type='hidden' name='goods.skuFeatures["+featureIndex+"].featureId' value='"
+									+goods.allfeature[index].featureId+"'/>"+"<input type='radio' id='goods_skuFeatures["
+									s+featureIndex+"]_specValue"+n+"' name='goods.skuFeatures["+featureIndex+"].specValue' value='"
+									+value.featureValue+"'><label for='goods_skuFeatures["+featureIndex+"]_specValue"+n+"'>"+value.featureValue+'</label>';
+									featureIndex++;
+								});
+							}
+						}
+					}
+					jqobject
+							.append(featureHtml);
+				}
+
+			}
+		},
+		viewspecificationFeature : function(skuindex) {
+			var n = 0;
+			for ( var i in goods.allfeature) {
+
+				if (goods.allfeature[i].isSpec == 1) {
+					var optionHTML = '<option value="'+goods.allfeature[i].featureId+'">'
+							+ goods.allfeature[i].name + '</option>';
+					if (n == 0) {
+						optionHTML = "<option>请选择</option>" + optionHTML;
+					}
+					$('#infoSelect').append(optionHTML);
+
+					var infoListHTML = '';
+					if (n == 0) {
+						infoListHTML+= '<div class="infolistCon" attr-num="'+ n +'"/>';
+					}
+					infoListHTML += '<div class="infolistCon" attr-num="'+ n +'">';
+					for ( var j in goods.allfeature[i].featureValues) {
+						infoListHTML += '<label><input type="checkbox" attr-value="'+ goods.allfeature[i].featureValues[j].featureValue +'">'
+								+ goods.allfeature[i].featureValues[j].featureValue
+								+ '</label>'
+					}
+					infoListHTML += '<div class="addinput"><input type="button" name="" value="增加" class="addBtn"></div>';
+					infoListHTML += '</div>';
+					$('#infoList').append(infoListHTML);
+					n++;
+				}
+			}
+			addBtn();
+		}
+	};
+	$(
+			function() {
+				
+				//全选
+				$('input[attr-id=allChecked]').on('click', function(){
+				    if($(this).prop('checked')){
+				        $(this).parents('tr').find('td').eq(1).find('input').prop('checked', true);
+				    }else{
+				        $(this).parents('tr').find('td').eq(1).find('input').prop('checked', false);
+				    }
+				})
+
+				// 响应全选
+				$('input').not('input[attr-id=allChecked]').on('click', function(){
+				    if($(this).parent().find('input').length == $(this).parent().find('input:checked').length){
+				        $(this).parents('tr').find('td').eq(0).find('input').prop('checked', true);
+				    }else{
+				        $(this).parents('tr').find('td').eq(0).find('input').prop('checked', false);
+				    }
+				})
+				
+				/*$("#goods_categoryId").change(function() {
+					goods.getFeatureByCategoryId($(this).val());
+					//  goods.viewOrdinaryFeature($("ordinaryfeature"),0);
+				});*/
+				// 选择对应相应数据
+				$('#infoSelect').on('change', function() {
+					var _index = $(this).find('option:selected').index();
+					$('#infoList').children().hide();
+					$('#infoList').children().eq(_index).show();
+				});
+			
+				//$("#goods_categoryId").change();
+				
+				$("#goodsbrandId").on('change',function(){
+					var brandId = $("#goodsbrandId").find("option:selected").val();
+					$("#goods_categoryIdShow").attr("value","");
+					if(brandId != null && brandId != ''){
+						refreshTree(brandId);
+						/*
+						$.post("${ctx}/goods/getCategoryByBrandId", {
+							"brandId" :brandId
+						}, function(data) {
+							if(data!=null){
+								$("#goods_categoryId").empty();
+								$("#goods_categoryId").append("<option value=''>请选择分类</option>");
+								$.each(data,function(i,item){
+									$("#goods_categoryId").append("<option value='"+item.categoryId+"'>"+item.name+"</option>");
+								});
+							}
+						}, "json")
+						*/
+					}
+				});
+				
+				$("#file1").change(function(){
+					ajaxFileUpload('file1',"img1");
+				})
+					$("#file2").change(function(){
+					ajaxFileUpload('file2',"img2");
+				})
+					$("#file3").change(function(){
+					ajaxFileUpload('file3',"img3");
+				})
+					$("#file4").change(function(){
+					ajaxFileUpload('file4',"img4");
+				})
+					$("#file5").change(function(){
+					ajaxFileUpload('file5',"img5");
+				})
+				$( "#tabs" ).tabs();
+			})
+</script>
+<script type="text/javascript">
+//以下是分类请求tree相关代码
+var tree="";
+var setting = {
+	
+	data: {
+		simpleData: {
+			enable: true
+		},
+		key: {
+			title: "title"
+		},
+	},
+	 callback: {
+		onClick: onClick,
+	}
+};
+var zNodes;
+
+function onClick(e, treeId, treeNode) {
+	var zTree = $.fn.zTree.getZTreeObj("treeDiv"),
+	nodes = zTree.getSelectedNodes(true),
+	v = "";//显示分类名称
+	a = "";//用于保存时展示分类id
+	nodes.sort(function compare(a,b){return a.id-b.id;});
+	for (var i=0, l=nodes.length; i<l; i++) {
+		v = nodes[i].name ;
+		a = nodes[i].id;
+	}
+	//if (v.length > 0 ) v = v.substring(0, v.length-1);
+	var cityObj = $("#goods_categoryIdShow");
+	//alert(cityObj);
+	cityObj.attr("value", v);
+	if(a.length > 0  ){
+		$("#goods_categoryId").val(a);
+		goods.getFeatureByCategoryId(a);
+	}else{
+		$("#goods_categoryId").val(0);
+	}
+	hideMenu();
+}
+//用于展示下拉框
+function showMenu() {
+	var goodsbrandId = $("#goodsbrandId").val();
+	if(goodsbrandId==null || goodsbrandId==""){
+		alert("请先选择品牌！");
+		return ;
+	}
+	var cityObj = $("#goods_categoryIdShow");
+	var cityOffset = $("#goods_categoryIdShow").offset();
+	$("#menuContent").css({left:cityOffset.left + "px", top:cityOffset.top + cityObj.outerHeight() + "px"}).slideDown("fast");
+	$("body").bind("mousedown", onBodyDown); 
+}
+function hideMenu() {
+	$("#menuContent").fadeOut("fast");
+	$("body").unbind("mousedown", onBodyDown);
+}
+function onBodyDown(event) {
+	if (!(event.target.id == "menuBtn" || event.target.id == "menuContent" || $(event.target).parents("#menuContent").length>0)) {
+		hideMenu();
+	}
+}
+
+//初始化tree
+function fuzhi(data){  
+    zNodes=eval(data);  
+    tree = $.fn.zTree.init($("#treeDiv"), setting, zNodes);  
+    tree.expandAll(true);
+}  
+
+function refreshTree(brandId){
+	$.get("${ctx}/goods/getCategoryTreeByBrandId?brandId="+brandId,function(data){  
+        fuzhi(data);  
+    });
+}
+ 
+</script>
+<body>
+	<form action="${ctx}/goods/add" method="post"
+		enctype="application/x-www-form-urlencoded">
+		<div id="tabs">
+			<ul>
+				<li><a href="#tabs-1">基本信息</a></li>
+				<li><a href="#tabs-2">商品详情</a></li>
+				<li><a href="#tabs-3">商品属性</a></li>
+				<li><a href="#tabs-4">商品规格</a></li>
+				<li><a href="#tabs-5">销售区域</a></li>
+				<li><a href="#tabs-6">拥金比例</a></li>
+			</ul>
+			<div id="tabs-1">
+				<table>
+					<tbody>
+						<tr>
+							<td>品牌</td>
+							<td><select id="goodsbrandId" name="goods.brandId">
+							<option value="">请选择品牌</option>
+							<#list brandList as brand_s>
+								<option value="#{brand_s.brandId!0}"> ${brand_s.chName!''} </option>
+							</#list>
+							</select></td>
+						</tr>
+						<tr>
+							<td>分类</td>
+							<td>
+							<input type="text" name="" id="goods_categoryIdShow" onclick="showMenu(); return false;" readonly="readonly"/>
+							<input id="goods_categoryId" name="goods.categoryId" type="hidden"/>
+							</td>
+						</tr>
+						<tr>
+							<td>商品名称</td>
+							<td><input type="text" name="goods.name" /></td>
+						</tr>
+						<tr>
+							<td>商品关键词：</td>
+							<td><input type="text" name="goods.keywords" /></td>
+						</tr>
+						<tr>
+							<td>商品编号</td>
+							<td><input type="text" name="goods.code" /></td>
+						</tr>
+						
+						<!--  <tr>
+							<td>单位</td>
+							<td><input type="text" name="goods.unit" /></td>
+						</tr>
+						-->
+						
+						<tr>
+							<td>描述</td>
+							<td><input type="text" name="goods.remark" /></td>
+						</tr>
+						
+						<tr>
+							<td><input type="hidden" name="goods.uuid" id="uuid" /> 封面：<input
+								type="file" name="file1" id="file1" /><br /> <img id="img1"
+								alt="" src="" class="imgcss"></td>
+						</tr>
+						<tr>
+							<td><input type="file" name="file2" id="file2" /><br /> <img
+								id="img2" alt="" src="" class="imgcss"></td>
+						</tr>
+						<tr>
+							<td><input type="file" name="file3" id="file3" /><br /> <img
+								id="img3" alt="" src="" class="imgcss"></td>
+						</tr>
+						<tr>
+							<td><input type="file" name="file4" id="file4" /><br /> <img
+								id="img4" alt="" src="" class="imgcss"></td>
+						</tr>
+						<tr>
+							<td><input type="file" name="file5" id="file5" /><br /> <img
+								id="img5" alt="" src="" class="imgcss"></td>
+						</tr>
+
+						<tr>
+							<td>参考价格</td>
+							<td><input type="text" name="goods.price" /></td>
+						</tr>
+						<tr>
+							<td>是否新品</td>
+							<td><input type="checkbox" name="goods.isNew" value="1" /></td>
+						</tr>
+						<tr>
+							<td>是否商品</td>
+							<td><input type="checkbox" name="goods.isGood" value="1" /></td>
+						</tr>
+						<tr>
+							<td>是否热门</td>
+							<td><input type="checkbox" name="goods.isHot" value="1" /></td>
+						</tr>
+						
+					</tbody>
+				</table>
+			</div>
+			
+			<div id="tabs-2">
+				<div><input type="hidden" id="goodsDesc" name="blob.goodsDesc"></div>
+				<div id="d2"><script type="text/plain" id="storyEditor" ></script></div>
+			</div>
+			
+			<div id="tabs-3">
+				<div id="ordinaryfeature"></div>
+			</div>
+			
+			<div  id="tabs-4">
+				<div title="商品规格" style="padding: 10px">
+					<div id="infoCheck">
+						<select name="" id="infoSelect"></select>
+						<div id="infoList"></div>
+					</div>
+					<div id="info_table1" class="tablediv"></div>
+					<div id="info_table2" class="tablediv"></div>
+				</div>
+			</div>
+			
+			<div  id="tabs-5">
+				<div title="销售区域" style="padding: 10px">
+					 <table>
+					 	<tr>
+					 		 <td colspan="2"></td>
+					 	</tr>
+					 	<#list  regionList as region>
+					 	<#if region.level == 1 >
+					 	<tr>
+					 		<td><input name="region" type="checkbox" value="${region.id}"  attr-id="allChecked"/>${region.name}</td>
+					 		<td> <#list  regionList as regionSec> <#if regionSec.level == 2 && region.id == regionSec.pid ><input name="region" type="checkbox" value="${regionSec.id}" />${regionSec.name} </#if>    </#list> </td>
+					 	</tr>
+					 	</#if>
+					 	</#list>
+					 	 
+					 </table>
+				</div>
+			</div>
+			
+			<div  id="tabs-6">
+				<div title="拥金比例" style="padding: 10px">
+					 <table>
+					 	<tr>
+					 		<td>村站拥金</td>
+					 		<td><input name="holdGold.vsAmount" id="vsAmount"/>元</td>
+					 	</tr>
+					 	<tr>
+					 		<td>LC拥金</td>
+					 		<td><input name="holdGold.lcAmount" id="lcAmount"/>元</td>
+					 	</tr>
+					 	<tr>
+					 		<td>工程师拥金</td>
+					 		<td><input name="holdGold.engineerAmount" id="engineerAmount"/>元</td>
+					 	</tr>
+					 	<tr>
+					 		<td>A+组长拥金</td>
+					 		<td><input name="holdGold.aAmount" id="aAmount"/>元</td>
+					 	</tr>
+					 	<tr>
+					 		<td>供应商拥金</td>
+					 		<td><input name="holdGold.supplierAmount" id="supplierAmount"/>元</td>
+					 	</tr>
+					 </table>
+				</div>
+			</div>
+			
+		</div>
+		
+		<div>
+			<input type="submit" value="提交" onclick="return getContent();"/> &nbsp;&nbsp;&nbsp; <input
+				type="button"
+				onclick="javascript:window.location.href='${ctx}/goods/list';"
+				value="返回列表">
+		</div>
+	</form>
+	
+<!-- 此div为分类展示下拉框 -->
+<div id="menuContent" class="menuContent" style="display:none; position: absolute;">
+	<ul id="treeDiv" class="ztree" style="margin-top:0; width:160px;"></ul>
+</div>
+</body>
+
+</html>

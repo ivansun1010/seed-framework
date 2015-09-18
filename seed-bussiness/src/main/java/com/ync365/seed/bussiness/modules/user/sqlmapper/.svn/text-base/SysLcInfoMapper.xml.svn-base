@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ync365.seed.bussiness.modules.user.dao.SysLcInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.ync365.seed.bussiness.modules.user.entity.SysLcInfo" >
+    <result column="user_num" property="userNum" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="telephone" property="telephone" jdbcType="VARCHAR" />
+    <result column="work_year" property="workYear" jdbcType="INTEGER" />
+    <result column="local_farmer_count" property="localFarmerCount" jdbcType="INTEGER" />
+    <result column="local_cropland_area" property="localCroplandArea" jdbcType="INTEGER" />
+    <result column="ID_card" property="idCard" jdbcType="VARCHAR" />
+    <result column="service_distinct" property="serviceDistinct" jdbcType="INTEGER" />
+    <result column="address" property="address" jdbcType="INTEGER" />
+    <result column="address_detail" property="addressDetail" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="authentication_state" property="authenticationState" jdbcType="INTEGER" />
+    <result column="authentication_time" property="authenticationTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <insert id="insert" parameterType="com.ync365.seed.bussiness.modules.user.entity.SysLcInfo" >
+    insert into sys_lc_info (user_num, name, telephone, 
+      work_year, local_farmer_count, local_cropland_area, 
+      ID_card, service_distinct, address, 
+      address_detail, create_time, authentication_state, 
+      authentication_time)
+    values (#{userNum,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{telephone,jdbcType=VARCHAR}, 
+      #{workYear,jdbcType=INTEGER}, #{localFarmerCount,jdbcType=INTEGER}, #{localCroplandArea,jdbcType=INTEGER}, 
+      #{idCard,jdbcType=VARCHAR}, #{serviceDistinct,jdbcType=INTEGER}, #{address,jdbcType=INTEGER}, 
+      #{addressDetail,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{authenticationState,jdbcType=INTEGER}, 
+      #{authenticationTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ync365.seed.bussiness.modules.user.entity.SysLcInfo" >
+    insert into sys_lc_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userNum != null" >
+        user_num,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="telephone != null" >
+        telephone,
+      </if>
+      <if test="workYear != null" >
+        work_year,
+      </if>
+      <if test="localFarmerCount != null" >
+        local_farmer_count,
+      </if>
+      <if test="localCroplandArea != null" >
+        local_cropland_area,
+      </if>
+      <if test="idCard != null" >
+        ID_card,
+      </if>
+      <if test="serviceDistinct != null" >
+        service_distinct,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="addressDetail != null" >
+        address_detail,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="authenticationState != null" >
+        authentication_state,
+      </if>
+      <if test="authenticationTime != null" >
+        authentication_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userNum != null" >
+        #{userNum,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null" >
+        #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="workYear != null" >
+        #{workYear,jdbcType=INTEGER},
+      </if>
+      <if test="localFarmerCount != null" >
+        #{localFarmerCount,jdbcType=INTEGER},
+      </if>
+      <if test="localCroplandArea != null" >
+        #{localCroplandArea,jdbcType=INTEGER},
+      </if>
+      <if test="idCard != null" >
+        #{idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceDistinct != null" >
+        #{serviceDistinct,jdbcType=INTEGER},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=INTEGER},
+      </if>
+      <if test="addressDetail != null" >
+        #{addressDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="authenticationState != null" >
+        #{authenticationState,jdbcType=INTEGER},
+      </if>
+      <if test="authenticationTime != null" >
+        #{authenticationTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+</mapper>

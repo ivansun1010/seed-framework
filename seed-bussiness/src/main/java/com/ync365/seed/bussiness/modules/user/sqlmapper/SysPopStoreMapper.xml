@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ync365.seed.bussiness.modules.user.dao.SysPopStoreMapper" >
+  <resultMap id="BaseResultMap" type="com.ync365.seed.bussiness.modules.user.entity.SysPopStore" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="pop_store_num" property="popStoreNum" jdbcType="VARCHAR" />
+    <result column="pop_store_name" property="popStoreName" jdbcType="VARCHAR" />
+    <result column="pop_store_ contact" property="popStoreContact" jdbcType="VARCHAR" />
+    <result column="pop_store_mobile" property="popStoreMobile" jdbcType="VARCHAR" />
+    <result column="pop_store_type" property="popStoreType" jdbcType="VARCHAR" />
+    <result column="pop_store_domain" property="popStoreDomain" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="BIT" />
+    <result column="is_frozen" property="isFrozen" jdbcType="BIT" />
+    <result column="is_authentication" property="isAuthentication" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, pop_store_num, pop_store_name, pop_store_contact, pop_store_mobile, pop_store_type, 
+    pop_store_domain, create_time, is_del, is_frozen, is_authentication
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_pop_store
+    where pop_store_num = #{popStoreNum,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sys_pop_store
+    where pop_store_num = #{popStoreNum,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertSelective" parameterType="com.ync365.seed.bussiness.modules.user.entity.SysPopStore" >
+    insert into sys_pop_store
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="popStoreNum != null" >
+        pop_store_num,
+      </if>
+      <if test="popStoreName != null" >
+        pop_store_name,
+      </if>
+      <if test="popStoreContact != null" >
+        pop_store_contact,
+      </if>
+      <if test="popStoreMobile != null" >
+        pop_store_mobile,
+      </if>
+      <if test="popStoreType != null" >
+        pop_store_type,
+      </if>
+      <if test="popStoreDomain != null" >
+        pop_store_domain,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+      <if test="isFrozen != null" >
+        is_frozen,
+      </if>
+      <if test="isAuthentication != null" >
+        is_authentication,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="popStoreNum != null" >
+        #{popStoreNum,jdbcType=VARCHAR},
+      </if>
+      <if test="popStoreName != null" >
+        #{popStoreName,jdbcType=VARCHAR},
+      </if>
+      <if test="popStoreContact != null" >
+        #{popStoreContact,jdbcType=VARCHAR},
+      </if>
+      <if test="popStoreMobile != null" >
+        #{popStoreMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="popStoreType != null" >
+        #{popStoreType,jdbcType=VARCHAR},
+      </if>
+      <if test="popStoreDomain != null" >
+        #{popStoreDomain,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=BIT},
+      </if>
+      <if test="isFrozen != null" >
+        #{isFrozen,jdbcType=BIT},
+      </if>
+      <if test="isAuthentication != null" >
+        #{isAuthentication,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ync365.seed.bussiness.modules.user.entity.SysPopStore" >
+    update sys_pop_store
+    <set >
+      <if test="popStoreName != null" >
+        pop_store_name = #{popStoreName,jdbcType=VARCHAR},
+      </if>
+      <if test="popStoreContact != null" >
+       pop_store_contact = #{popStoreContact,jdbcType=VARCHAR},
+      </if>
+      <if test="popStoreMobile != null" >
+        pop_store_mobile = #{popStoreMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="popStoreType != null" >
+        pop_store_type = #{popStoreType,jdbcType=VARCHAR},
+      </if>
+      <if test="popStoreDomain != null" >
+        pop_store_domain = #{popStoreDomain,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=BIT},
+      </if>
+      <if test="isFrozen != null" >
+        is_frozen = #{isFrozen,jdbcType=BIT},
+      </if>
+      <if test="isAuthentication != null" >
+        is_authentication = #{isAuthentication,jdbcType=BIT},
+      </if>
+    </set>
+    where pop_store_num = #{popStoreNum,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="selectPageByMap" parameterType="map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from sys_pop_store
+		<where>
+			<if test="popStoreNum != null">
+				and pop_store_num = #{popStoreNum,jdbcType=VARCHAR}
+			</if>
+			<if test="popStoreName != null" >
+		        and  pop_store_name = #{popStoreName,jdbcType=VARCHAR}
+		    </if>
+		    <if test="popStoreContact != null" >
+		        and pop_store_contact = #{popStoreContact,jdbcType=VARCHAR}
+		    </if>
+		    <if test="popStoreMobile != null" >
+		        and pop_store_mobile = #{popStoreMobile,jdbcType=VARCHAR}
+		    </if>
+		    <if test="popStoreType != null" >
+		        and pop_store_type = #{popStoreType,jdbcType=VARCHAR}
+		    </if>
+		    <if test="popStoreDomain != null" >
+		        and pop_store_domain = #{popStoreDomain,jdbcType=VARCHAR}
+		    </if>
+		    <if test="createTime != null" >
+		        and create_time = #{createTime,jdbcType=TIMESTAMP}
+		    </if>
+		    <if test="isDel != null" >
+		        and is_del = #{isDel,jdbcType=BIT}
+		    </if>
+		    <if test="isFrozen != null" >
+		        and is_frozen = #{isFrozen,jdbcType=BIT}
+		    </if>
+		    <if test="isAuthentication != null" >
+		        and is_authentication = #{isAuthentication,jdbcType=BIT}
+		    </if>
+		</where>
+		<if test="pageIndex !=null and pageSize != null">
+			limit ${pageIndex},${pageSize}
+		</if>
+	</select>
+		<select id="selectPageCount" parameterType="map" resultType="int">
+		select
+		count(1)
+		from sys_pop_store
+		<where>
+			<if test="popStoreNum != null">
+				and pop_store_num = #{popStoreNum,jdbcType=VARCHAR}
+			</if>
+			<if test="popStoreName != null" >
+		        and pop_store_name = #{popStoreName,jdbcType=VARCHAR}
+		    </if>
+		    <if test="popStoreContact != null" >
+		        and pop_store_contact = #{popStoreContact,jdbcType=VARCHAR}
+		    </if>
+		    <if test="popStoreMobile != null" >
+		        and pop_store_mobile = #{popStoreMobile,jdbcType=VARCHAR}
+		    </if>
+		    <if test="popStoreType != null" >
+		        and pop_store_type = #{popStoreType,jdbcType=VARCHAR}
+		    </if>
+		    <if test="popStoreDomain != null" >
+		        and pop_store_domain = #{popStoreDomain,jdbcType=VARCHAR}
+		    </if>
+		    <if test="createTime != null" >
+		        and create_time = #{createTime,jdbcType=TIMESTAMP}
+		    </if>
+		    <if test="isDel != null" >
+		        and is_del = #{isDel,jdbcType=BIT}
+		    </if>
+		    <if test="isFrozen != null" >
+		        and is_frozen = #{isFrozen,jdbcType=BIT}
+		    </if>
+		    <if test="isAuthentication != null" >
+		        and is_authentication = #{isAuthentication,jdbcType=BIT}
+		    </if>
+		</where>
+  	</select>
+</mapper>

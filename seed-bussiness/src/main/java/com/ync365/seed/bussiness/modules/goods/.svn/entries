@@ -1,0 +1,43 @@
+10
+
+dir
+1507
+svn://192.168.98.76/project/code/seed-framework/seed-bussiness/src/main/java/com/ync365/seed/bussiness/modules/goods
+svn://192.168.98.76/project
+
+
+
+2015-09-17T03:17:42.202121Z
+1324
+guanfl
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+68ace0ce-81fd-4f19-975a-7f69436b9dff
+
+biz
+dir
+
+dao
+dir
+
+entity
+dir
+
+sqlmapper
+dir
+
+util
+dir
+

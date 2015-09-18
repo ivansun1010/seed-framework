@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ync365.seed.bussiness.modules.user.dao.SysPopStoreBrandRelationshipMapper" >
+  <resultMap id="BaseResultMap" type="com.ync365.seed.bussiness.modules.user.entity.SysPopStoreBrandRelationship" >
+    <result column="pop_store_num" property="popStoreNum" jdbcType="VARCHAR" />
+    <result column="brand_id" property="brandId" jdbcType="INTEGER" />
+  </resultMap>
+  <insert id="insert" parameterType="com.ync365.seed.bussiness.modules.user.entity.SysPopStoreBrandRelationship" >
+    insert into sys_pop_store_brand_relationship (pop_store_num, brand_id)
+    values (#{popStoreNum,jdbcType=VARCHAR}, #{brandId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ync365.seed.bussiness.modules.user.entity.SysPopStoreBrandRelationship" >
+    insert into sys_pop_store_brand_relationship
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="popStoreNum != null" >
+        pop_store_num,
+      </if>
+      <if test="brandId != null" >
+        brand_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="popStoreNum != null" >
+        #{popStoreNum,jdbcType=VARCHAR},
+      </if>
+      <if test="brandId != null" >
+        #{brandId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+</mapper>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ync365.seed.bussiness.modules.user.dao.SysUserRoleMapper" >
+  <resultMap id="BaseResultMap" type="com.ync365.seed.bussiness.modules.user.entity.SysUserRole" >
+    <result column="user_num" property="userNum" jdbcType="VARCHAR" />
+    <result column="role_id" property="roleId" jdbcType="INTEGER" />
+    <result column="is_authentication" property="isAuthentication" jdbcType="BIT" />
+  </resultMap>
+  <insert id="insert" parameterType="com.ync365.seed.bussiness.modules.user.entity.SysUserRole" >
+    insert into sys_user_role (user_num, role_id, is_authentication
+      )
+    values (#{userNum,jdbcType=VARCHAR}, #{roleId,jdbcType=INTEGER}, #{isAuthentication,jdbcType=BIT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ync365.seed.bussiness.modules.user.entity.SysUserRole" >
+    insert into sys_user_role
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userNum != null" >
+        user_num,
+      </if>
+      <if test="roleId != null" >
+        role_id,
+      </if>
+      <if test="isAuthentication != null" >
+        is_authentication,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userNum != null" >
+        #{userNum,jdbcType=VARCHAR},
+      </if>
+      <if test="roleId != null" >
+        #{roleId,jdbcType=INTEGER},
+      </if>
+      <if test="isAuthentication != null" >
+        #{isAuthentication,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+</mapper>

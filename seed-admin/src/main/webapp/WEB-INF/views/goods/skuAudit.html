@@ -1,0 +1,48 @@
+<#assign ctx="${request.contextPath}" /> 
+<#assign staticCtx="${request.contextPath}/resources" />
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+<link rel="stylesheet" media="screen" type="text/css" href="${staticCtx}/jqGrid/css/ui.jqgrid.css" />
+
+<link rel="stylesheet" href="${staticCtx}/zTree/css/demo.css" type="text/css">
+<link rel="stylesheet" href="${staticCtx}/zTree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="${staticCtx}/zTree/js/jquery-1.4.4.min.js"></script>
+<script type="text/javascript" src="${staticCtx}/zTree/js/jquery.ztree.core-3.5.js"></script>
+<script type="text/javascript" src="${staticCtx}/zTree/js/jquery.ztree.excheck-3.5.js"></script>
+<script type="text/javascript" src="${staticCtx}/zTree/js/jquery.ztree.exedit-3.5.js"></script> 
+<script type="text/javascript" src="${staticCtx}/zTree/js/jquery.ztree.exhide-3.5.js"></script>
+
+
+<!-- <script type="text/javascript" src="${staticCtx}/jqGrid/js/jquery-1.11.0.min.js"></script> -->
+<script type="text/javascript" src="${staticCtx}/jqGrid/js/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="${staticCtx}/jqGrid/js/jquery.jqGrid.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<body>
+	<form action="${ctx}/sku/disPassAudit" id="auditForm" method="post" enctype="application/x-www-form-urlencoded">
+		<input type ="hidden" name ="id" id = "id" value="${auditSku.id!''}"/>
+		<input type ="hidden" name ="status" id = "status" value="2"/>
+		<table id="tb" class="view">
+			<tr>
+				<th><label for="skuId"><font color="red"></font></label></th>
+				<td><input type="hidden" id="skuId" name="skuId" value="${auditSku.skuId!''}"/></td>
+			</tr>
+			<tr>
+				<th><label for="reason"><font color="red">*</font>审核意见：</label></th>
+				<td><input class="easyui-validatebox" type="text" id="reason" name="reason" />
+				</td>
+			</tr>			
+		<!-- 	<tr>
+				<th><label for="status">是否通过审核：</label></th>
+				<td><input   type="radio" id="status"	name="status" value="1" />审核通过 
+					<input   type="radio" id="status"   name="status" value="2" />审核不通过
+				</td>
+			</tr>	 -->
+		</table>
+		<input type="submit" name="submit" value="提交">
+		
+	</form>
+	
+</body>
+</html>

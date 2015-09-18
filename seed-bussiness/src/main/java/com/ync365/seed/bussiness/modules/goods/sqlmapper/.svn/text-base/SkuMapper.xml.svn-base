@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ync365.seed.bussiness.modules.goods.dao.SkuDao">
+	<resultMap id="BaseResultMap"
+		type="com.ync365.seed.bussiness.modules.goods.entity.Sku">
+		<id column="sku_id" property="skuId" jdbcType="INTEGER" />
+		<result column="goods_id" property="goodsId" jdbcType="INTEGER" />
+		<result column="sku" property="sku" jdbcType="VARCHAR" />
+		<result column="stock_num" property="stockNum" jdbcType="DECIMAL" />
+		<result column="market_price" property="marketPrice" jdbcType="DECIMAL" />
+		<result column="sell_price" property="sellPrice" jdbcType="DECIMAL" />
+		<result column="cost_price" property="costPrice" jdbcType="DECIMAL" />
+		<result column="lower_limit" property="lowerLimit" jdbcType="DECIMAL" />
+		<result column="upper_limit" property="upperLimit" jdbcType="DECIMAL" />
+		<result column="goods_name" property="goodsName" jdbcType="VARCHAR" />
+		<result column="ftype" property="ftype" jdbcType="DECIMAL" />
+		<result column="sort" property="sort" jdbcType="DECIMAL" />
+		<result column="sales_count" property="salesCount" jdbcType="DECIMAL" />
+		<result column="status" property="status" jdbcType="DECIMAL" />
+		<result column="bar_code" property="barCode" jdbcType="VARCHAR" />
+		<result column="goods_code" property="goodsCode" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="opt_date" property="optDate" jdbcType="TIMESTAMP" />
+		<result column="opt_user" property="optUser" jdbcType="INTEGER" />
+		<result column="opt_term" property="optTerm" jdbcType="VARCHAR" />
+		<result column="is_delete" property="isDelete" jdbcType="DECIMAL" />
+	</resultMap>
+	<!-- 审核&发布结果列 -->
+	<resultMap id="ARResultMap"
+		type="com.ync365.seed.bussiness.modules.goods.entity.Sku">
+		<id column="sku_id" property="skuId" jdbcType="INTEGER" />
+		<result column="goods_id" property="goodsId" jdbcType="INTEGER" />
+		<result column="sku" property="sku" jdbcType="VARCHAR" />
+		<result column="stock_num" property="stockNum" jdbcType="DECIMAL" />
+		<result column="market_price" property="marketPrice" jdbcType="DECIMAL" />
+		<result column="sell_price" property="sellPrice" jdbcType="DECIMAL" />
+		<result column="cost_price" property="costPrice" jdbcType="DECIMAL" />
+		<result column="lower_limit" property="lowerLimit" jdbcType="DECIMAL" />
+		<result column="upper_limit" property="upperLimit" jdbcType="DECIMAL" />
+		<result column="goods_name" property="goodsName" jdbcType="VARCHAR" />
+		<result column="ftype" property="ftype" jdbcType="DECIMAL" />
+		<result column="sort" property="sort" jdbcType="DECIMAL" />
+		<result column="sales_count" property="salesCount" jdbcType="DECIMAL" />
+		<result column="status" property="status" jdbcType="DECIMAL" />
+		<result column="bar_code" property="barCode" jdbcType="VARCHAR" />
+		<result column="goods_code" property="goodsCode" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="opt_date" property="optDate" jdbcType="TIMESTAMP" />
+		<result column="opt_user" property="optUser" jdbcType="INTEGER" />
+		<result column="opt_term" property="optTerm" jdbcType="VARCHAR" />
+		<result column="is_good" property="isGood" jdbcType="INTEGER" />
+		<result column="is_hot" property="isHot" jdbcType="INTEGER" />
+		<result column="is_delete" property="isDelete" jdbcType="DECIMAL" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		sku_id, goods_id, sku, stock_num, market_price, sell_price,cost_price, lower_limit, upper_limit,
+		goods_name,
+		ftype, sort, sales_count, status , bar_code, goods_code, create_time,
+		opt_date,
+		opt_user, opt_term,
+		 is_Delete
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from goods_sku
+		where is_Delete!=1 and sku_id = #{skuId,jdbcType=INTEGER}
+	</select>
+
+	<select id="searchPageCount" resultType="Integer" parameterType="map">
+		select count(*) from goods_sku
+		where goods_id in (
+		select a.goods_id from goods_sku a
+		left join goods g on a.goods_id=g.goods_id
+		<where>
+			a.is_Delete!=1
+			<if test="name!=null and name!='null' and name !=''">
+				and g.name like '%'||#{name}||'%'
+			</if>
+			<if test="code!=null &amp;&amp; code.length()">
+				and g.code like '%'||#{code}||'%'
+			</if>
+			<if test="stockStart!=null &amp;&amp; stock.length()">
+				and a.stock_num between #{stockStart} and #{stockEnd}
+			</if>
+		</where>
+		) 
+	</select>
+	<!-- 分页查询之条件搜索 -->
+	<select id="searchPage" resultMap="BaseResultMap" parameterType="map">
+		select a.* from
+		(select * from goods_sku
+		where goods_id in (
+		select gs.goods_id from goods_sku gs
+		left join goods g on gs.goods_id=g.goods_id
+		<where>
+			gs.is_Delete!=1
+			<if test="name!=null and name!='null' and name !=''">
+				and g.name like '%'||#{name}||'%'
+			</if>
+			<if test="code!=null and code!='' ">
+				and g.code like '%'||#{code}||'%'
+			</if>
+			<if test="stockStart!= null  and stockEnd != null  and stockStart !=''">
+				and gs.stock_num between #{stockStart} and #{stockEnd}
+			</if>
+		</where>
+		)
+		order by goods_id ) a
+		limit #{pageIndex} , #{pageSize}
+	</select>
+	
+	<select id="searchAuditPage" resultMap="ARResultMap" parameterType="map">
+		select
+			gs.*,g.is_good,g.is_hot
+		from 
+			goods_sku gs ,goods g  
+		<where>
+			gs.is_Delete!=1 and
+			gs.goods_id = g.goods_id 
+			and gs.status in (0,1,2)
+		
+			<if test="name!=null and name!='null' and name !=''">
+				and g.name like '%'||#{name}||'%'
+			</if>
+			<if test="code!=null and code!='' ">
+				and g.code like '%'||#{code}||'%'
+			</if>
+			<if test="stockStart!= null  and stockEnd != null  and stockStart !=''">
+				and a.stock_num between #{stockStart} and #{stockEnd}
+			</if>
+		</where>
+		 limit #{pageIndex} , #{pageSize}
+	</select>
+	<select id="searchReleasePage" resultMap="ARResultMap" parameterType="map">
+		select
+			gs.*,g.is_good,g.is_hot
+		from 
+			goods_sku gs ,goods g
+		<where>
+			gs.goods_id = g.goods_id 
+			and gs.is_Delete!=1
+			and gs.status in (1,3,4)
+			<if test="name!=null and name!='null' and name !=''">
+				and g.name like '%'||#{name}||'%'
+			</if>
+			<if test="code!=null and code!='' ">
+				and g.code like '%'||#{code}||'%'
+			</if>
+			<if test="stockStart!= null  and stockEnd != null  and stockStart !=''">
+				and a.stock_num between #{stockStart} and #{stockEnd}
+			</if>
+		</where>
+		 limit #{pageIndex} , #{pageSize}
+	</select>
+
+	<select id="selectByGoodsId" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from goods_sku
+		where
+		is_Delete!=1 
+		and goods_id = #{goodsId,jdbcType=INTEGER}
+	</select>
+
+<!-- 	将删除方法改为逻辑删除 -->
+<!-- 	15-09-12 -->
+	<update id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		update goods_sku set is_Delete=1
+		where goods_id = #{goodsId,jdbcType=INTEGER};
+	</update>
+	
+	<!--  新增 -->
+	<insert id="insert" parameterType="com.ync365.seed.bussiness.modules.goods.entity.Sku"
+		useGeneratedKeys="true" keyProperty="skuId" keyColumn="sku_id">
+		insert into goods_sku (sku_id,goods_id ,sku,
+		stock_num, market_price, sell_price, cost_price,
+		lower_limit, upper_limit, goods_name,
+		ftype, sort, sales_count,
+		status,   bar_code,
+		goods_code, create_time, opt_date,
+		opt_user, opt_term, is_Delete)
+		values ( #{skuId,jdbcType=INTEGER}, #{goodsId,jdbcType=INTEGER},
+		#{sku,jdbcType=VARCHAR},
+		#{stockNum,jdbcType=DECIMAL}, #{marketPrice,jdbcType=DECIMAL}, #{sellPrice,jdbcType=DECIMAL},#{costPrice,jdbcType=DECIMAL},
+		#{lowerLimit,jdbcType=DECIMAL}, #{upperLimit,jdbcType=DECIMAL},
+		#{goodsName,jdbcType=VARCHAR},
+		#{ftype,jdbcType=DECIMAL}, #{sort,jdbcType=DECIMAL}, #{salesCount,jdbcType=DECIMAL},
+		#{status,jdbcType=DECIMAL}, 
+		#{barCode,jdbcType=VARCHAR},
+		#{goodsCode,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{optDate,jdbcType=TIMESTAMP},
+		#{optUser,jdbcType=INTEGER}, #{optTerm,jdbcType=VARCHAR},0)
+	</insert>
+
+	<!--  更新-->
+	<update id="updateByPrimaryKey" parameterType="com.ync365.seed.bussiness.modules.goods.entity.Sku">
+		update goods_sku
+		set goods_id = #{goodsId,jdbcType=INTEGER},
+		sku = #{sku,jdbcType=VARCHAR},
+		stock_num = #{stockNum,jdbcType=DECIMAL},
+		market_price = #{marketPrice,jdbcType=DECIMAL},
+		sell_price = #{sellPrice,jdbcType=DECIMAL},
+		cost_price = #{costPrice,jdbcType=DECIMAL},
+		lower_limit = #{lowerLimit,jdbcType=DECIMAL},
+		upper_limit = #{upperLimit,jdbcType=DECIMAL},
+		goods_name = #{goodsName,jdbcType=VARCHAR},
+		ftype = #{ftype,jdbcType=DECIMAL},
+		sort = #{sort,jdbcType=DECIMAL},
+		sales_count = #{salesCount,jdbcType=DECIMAL},
+		status = #{status,jdbcType=DECIMAL},
+		bar_code = #{barCode,jdbcType=VARCHAR},
+		goods_code = #{goodsCode,jdbcType=VARCHAR},
+		create_time = #{createTime,jdbcType=TIMESTAMP},
+		opt_date = #{optDate,jdbcType=TIMESTAMP},
+		opt_user = #{optUser,jdbcType=INTEGER},
+		opt_term = #{optTerm,jdbcType=VARCHAR}
+		where sku_id = #{skuId,jdbcType=INTEGER}
+	</update>
+
+	<!--  根据商品主键更新SKU -->
+	<update id="updateByGoodsId" parameterType="com.ync365.seed.bussiness.modules.goods.entity.Sku">
+		update goods_sku
+		<set>
+			<if test="sku != null">
+				sku = #{sku,jdbcType=VARCHAR},
+			</if>
+			<if test="stockNum != null">
+				stock_num = #{stockNum,jdbcType=DECIMAL},
+			</if>
+			<if test="marketPrice != null">
+				market_price = #{marketPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="sellPrice != null">
+				sell_price = #{sellPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="costPrice != null">
+				cost_price = #{costPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="lowerLimit != null">
+				lower_limit = #{lowerLimit,jdbcType=DECIMAL},
+			</if>
+			<if test="upperLimit != null">
+				upper_limit = #{upperLimit,jdbcType=DECIMAL},
+			</if>
+			<if test="goodsName != null">
+				goods_name = #{goodsName,jdbcType=VARCHAR},
+			</if>
+			<if test="ftype != null">
+				ftype = #{ftype,jdbcType=DECIMAL},
+			</if>
+			<if test="sort != null">
+				sort = #{sort,jdbcType=DECIMAL},
+			</if>
+			<if test="salesCount != null">
+				sales_count= #{salesCount,jdbcType=DECIMAL},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=DECIMAL},
+			</if>
+			<if test="barCode != null">
+				bar_code = #{barCode,jdbcType=VARCHAR},
+			</if>
+			<if test="goodsCode != null">
+				goods_code = #{goodsCode,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="optDate != null">
+				opt_date = #{optDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="optUser != null">
+				opt_user = #{optUser,jdbcType=BIGINT},
+			</if>
+			<if test="optTerm != null">
+				opt_term = #{optTerm,jdbcType=VARCHAR},
+			</if>
+			<if test="isDelete != null">
+				is_Delete = #{isDelete,jdbcType=DECIMAL},
+			</if>
+		</set>
+		where goods_id= #{goodsId,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 上下架  -->
+	<update id="grounding" parameterType="map">
+		update goods_sku
+		set status = #{status}
+		where sku_id= #{skuId,jdbcType=INTEGER}
+	</update>
+</mapper>

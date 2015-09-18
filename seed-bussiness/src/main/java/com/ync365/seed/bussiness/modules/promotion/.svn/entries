@@ -1,0 +1,77 @@
+10
+
+dir
+1507
+svn://192.168.98.76/project/code/seed-framework/seed-bussiness/src/main/java/com/ync365/seed/bussiness/modules/promotion
+svn://192.168.98.76/project
+
+
+
+2015-09-18T11:03:40.675886Z
+1503
+liyh
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+68ace0ce-81fd-4f19-975a-7f69436b9dff
+
+biz
+dir
+
+dao
+dir
+
+entity
+dir
+
+generatorConfig.xml
+file
+
+
+
+
+2015-09-18T11:28:21.901000Z
+3004e4f571e7f9e455cf109a0bb77880
+2015-09-18T06:52:37.843564Z
+1400
+wangj
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2403
+
+sqlmapper
+dir
+
+util
+dir
+

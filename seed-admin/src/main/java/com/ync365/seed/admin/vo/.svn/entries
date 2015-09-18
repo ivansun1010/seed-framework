@@ -1,0 +1,71 @@
+10
+
+dir
+1507
+svn://192.168.98.76/project/code/seed-framework/seed-admin/src/main/java/com/ync365/seed/admin/vo
+svn://192.168.98.76/project
+
+
+
+2015-09-18T10:20:24.835927Z
+1480
+sunyf
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+68ace0ce-81fd-4f19-975a-7f69436b9dff
+
+Test.java
+file
+
+
+
+
+2015-09-18T11:28:09.080000Z
+2c33301c1312627d80c0cee96b25f5b8
+2015-09-09T03:17:47.311777Z
+1003
+yuanxm
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+122
+
+base
+dir
+
+goods
+dir
+
+promotion
+dir
+

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ync365.seed.bussiness.modules.user.dao.SysAdminServiceMapper" >
+  <resultMap id="BaseResultMap" type="com.ync365.seed.bussiness.modules.user.entity.SysAdminService" >
+    <result column="admin_num" property="adminNum" jdbcType="VARCHAR" />
+    <result column="admin_service_distinct" property="adminServiceDistinct" jdbcType="INTEGER" />
+  </resultMap>
+  <insert id="insert" parameterType="com.ync365.seed.bussiness.modules.user.entity.SysAdminService" >
+    insert into sys_admin_service (admin_num, admin_service_distinct)
+    values (#{adminNum,jdbcType=VARCHAR}, #{adminServiceDistinct,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ync365.seed.bussiness.modules.user.entity.SysAdminService" >
+    insert into sys_admin_service
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="adminNum != null" >
+        admin_num,
+      </if>
+      <if test="adminServiceDistinct != null" >
+        admin_service_distinct,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="adminNum != null" >
+        #{adminNum,jdbcType=VARCHAR},
+      </if>
+      <if test="adminServiceDistinct != null" >
+        #{adminServiceDistinct,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+</mapper>

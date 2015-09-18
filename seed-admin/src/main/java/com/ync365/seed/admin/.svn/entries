@@ -1,0 +1,43 @@
+10
+
+dir
+1507
+svn://192.168.98.76/project/code/seed-framework/seed-admin/src/main/java/com/ync365/seed/admin
+svn://192.168.98.76/project
+
+
+
+2015-09-18T11:12:10.630126Z
+1506
+liyh
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+68ace0ce-81fd-4f19-975a-7f69436b9dff
+
+controller
+dir
+
+security
+dir
+
+utils
+dir
+
+viewmodel
+dir
+
+vo
+dir
+
